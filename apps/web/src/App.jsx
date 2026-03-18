@@ -1,0 +1,269 @@
+
+import React, { createContext, useContext, useEffect, useMemo, useRef, useState } from 'react';
+import { Route, Routes, BrowserRouter as Router, useLocation } from 'react-router-dom';
+import FloatingCortex from './components/FloatingCortex.jsx';
+import HolographicSidebar from './components/HolographicSidebar.jsx';
+import HomePage from './pages/HomePage.jsx';
+import FeaturesPage from './pages/FeaturesPage.jsx';
+import BlogPage from './pages/BlogPage.jsx';
+import TrustPage from './pages/TrustPage.jsx';
+import ContactPage from './pages/ContactPage.jsx';
+import { AnimatePresence, motion } from 'framer-motion';
+import Spline from '@splinetool/react-spline';
+
+// ── Shared context for Spline ref, gaze sync, and glow state ──────────────────
+export const CortexSplineContext = createContext({
+  splineRef: { current: null },
+  activeIndex: null,
+  setActiveIndex: () => {},
+  hoveredIndex: null,
+  setHoveredIndex: () => {},
+});
+
+export function useCortexSpline() {
+  return useContext(CortexSplineContext);
+}
+
+// ── Page transition config ────────────────────────────────────────────────────
+const TRANSITION_SPEED = 0.8;
+const LINGER_OPACITY = 0;
+
+const pageTransition = {
+  initial: { opacity: LINGER_OPACITY, filter: 'blur(10px)', y: 12 },
+  animate: { opacity: 1, filter: 'blur(0px)', y: 0 },
+  exit: { opacity: LINGER_OPACITY, filter: 'blur(10px)', y: -12 },
+  transition: { duration: TRANSITION_SPEED, ease: [0.43, 0.13, 0.23, 0.96] },
+};
+
+// ── "System Online" toast ─────────────────────────────────────────────────────
+function SystemToast() {
+  const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setVisible(false), 4600);
+    return () => clearTimeout(timer);
+  }, []);
+
+  return (
+    <AnimatePresence>
+      {visible && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 10 }}
+          transition={{ delay: 1.6, duration: 0.5, ease: 'easeOut' }}
+          className="fixed bottom-6 right-6 z-[200] flex items-center gap-2 px-4 py-2.5 rounded-full"
+          style={{
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            background: 'rgba(255, 255, 255, 0.12)',
+            border: '1px solid rgba(255, 255, 255, 0.2)',
+            boxShadow: '0 4px 24px rgba(0, 0, 0, 0.12)',
+          }}
+        >
+          <span
+            className="h-2 w-2 rounded-full"
+            style={{
+              background: '#22c55e',
+              boxShadow: '0 0 8px rgba(34, 197, 94, 0.8)',
+              animation: 'pulse 2s infinite',
+            }}
+          />
+          <span
+            className="text-xs font-semibold tracking-widest uppercase"
+            style={{ color: '#1e293b', letterSpacing: '0.12em' }}
+          >
+            System Online
+          </span>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+}
+
+// ── Animated routes ───────────────────────────────────────────────────────────
+function AnimatedRoutes() {
+  const location = useLocation();
+
+  return (
+    <AnimatePresence
+      mode="wait"
+      initial={false}
+      onExitComplete={() => window.scrollTo({ top: 0, left: 0, behavior: 'instant' })}
+    >
+      <motion.main
+        key={location.pathname}
+        initial={pageTransition.initial}
+        animate={pageTransition.animate}
+        exit={pageTransition.exit}
+        transition={pageTransition.transition}
+        style={{ willChange: 'opacity, transform, filter' }}
+      >
+        <Routes location={location} key={location.pathname}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/features" element={<FeaturesPage />} />
+          <Route path="/blog" element={<BlogPage />} />
+          <Route path="/trust" element={<TrustPage />} />
+          <Route path="/contact" element={<ContactPage />} />
+          <Route
+            path="*"
+            element={
+              <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4">
+                <h1 className="text-4xl font-bold text-slateText mb-4">404</h1>
+                <p className="text-slateMuted mb-8">The page you're looking for doesn't exist.</p>
+                <a href="/" className="text-primary hover:underline">
+                  Return Home
+                </a>
+              </div>
+            }
+          />
+        </Routes>
+      </motion.main>
+    </AnimatePresence>
+  );
+}
+
+// ── Root App ──────────────────────────────────────────────────────────────────
+function App() {
+  const [theme, setTheme] = useState('light');
+  const [activeIndex, setActiveIndex] = useState(null);
+  const [hoveredIndex, setHoveredIndex] = useState(null);
+  const splineRef = useRef(null);
+
+  // Dark/light mode persistence
+  useEffect(() => {
+    const saved = localStorage.getItem('theme');
+    if (saved === 'light' || saved === 'dark') {
+      setTheme(saved);
+      return;
+    }
+    const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)')?.matches;
+    setTheme(prefersDark ? 'dark' : 'light');
+  }, []);
+
+  useEffect(() => {
+    const root = document.documentElement;
+    root.classList.toggle('dark', theme === 'dark');
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  // Color themes (only blue + black remain)
+  const COLOR_THEME_KEY = 'colorTheme';
+  const COLOR_THEMES = ['blue', 'black'];
+
+  function applyColorTheme(value) {
+    const root = document.documentElement;
+    root.classList.remove('theme-black');
+    if (value === 'black') root.classList.add('theme-black');
+  }
+
+  useEffect(() => {
+    const saved = localStorage.getItem(COLOR_THEME_KEY);
+    if (COLOR_THEMES.includes(saved)) {
+      applyColorTheme(saved);
+    }
+  }, []);
+
+  // Keyboard shortcuts: Shift+B = blue, Shift+L = black (no effect in dark mode)
+  useEffect(() => {
+    const onKeyDown = (e) => {
+      if (theme === 'dark') return;
+      if (!e.shiftKey) return;
+      const key = e.key?.toUpperCase();
+      if (key === 'B') {
+        e.preventDefault();
+        localStorage.setItem(COLOR_THEME_KEY, 'blue');
+        applyColorTheme('blue');
+      } else if (key === 'L') {
+        e.preventDefault();
+        localStorage.setItem(COLOR_THEME_KEY, 'black');
+        applyColorTheme('black');
+      }
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [theme]);
+
+  const toggleTheme = useMemo(
+    () => () =>
+      setTheme((t) => {
+        const next = t === 'dark' ? 'light' : 'dark';
+        if (next === 'dark') {
+          const color = localStorage.getItem(COLOR_THEME_KEY);
+          if (color === 'black') {
+            localStorage.setItem(COLOR_THEME_KEY, 'blue');
+            applyColorTheme('blue');
+          }
+        }
+        return next;
+      }),
+    []
+  );
+
+  // Gaze-sync: when activeIndex changes, try to nudge Spline robot gaze
+  useEffect(() => {
+    try {
+      if (!splineRef.current) return;
+      if (activeIndex !== null) {
+        splineRef.current.emitEvent?.('mouseDown', 'gazeTarget');
+      }
+    } catch (_) {
+      // Graceful degradation — Spline scene may not expose gazeTarget
+    }
+  }, [activeIndex]);
+
+  const contextValue = useMemo(
+    () => ({ splineRef, activeIndex, setActiveIndex, hoveredIndex, setHoveredIndex }),
+    [activeIndex, hoveredIndex]
+  );
+
+  return (
+    <CortexSplineContext.Provider value={contextValue}>
+      <Router>
+        <div
+          className="overflow-hidden h-screen w-screen bg-background text-foreground font-sans selection:bg-primary/20 selection:text-foreground"
+          style={{ position: 'relative' }}
+        >
+          {/* ── Fullscreen Spline background ── */}
+          {/* pointer-events must remain ON so the Spline canvas receives mousemove for head tracking.
+              The canvas is at z-0; all UI sits at z-[5]+, so clicks on UI elements are never lost. */}
+          <motion.div
+            className="fixed inset-0 w-screen h-screen z-0 cortex-spline"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3, duration: 0.8, ease: 'easeOut' }}
+          >
+            <Spline
+              scene="https://prod.spline.design/9y6PsIQWoUD30A2L/scene.splinecode"
+              onLoad={(splineApp) => { splineRef.current = splineApp; }}
+              style={{ width: '100%', height: '100%', background: 'transparent' }}
+            />
+          </motion.div>
+
+          {/* ── Global edge glow (pulses on sidebar hover) ── */}
+          <motion.div
+            className="fixed inset-0 pointer-events-none z-[5]"
+            animate={{
+              opacity: hoveredIndex !== null ? 1 : 0,
+              boxShadow:
+                hoveredIndex !== null
+                  ? 'inset 0 0 80px rgba(0, 112, 243, 0.15)'
+                  : 'inset 0 0 0px rgba(0, 112, 243, 0)',
+            }}
+            transition={{ duration: 0.4, ease: 'easeInOut' }}
+          />
+
+          {/* ── Sidebar, routes, floating chat ── */}
+          <HolographicSidebar />
+          <FloatingCortex />
+          <AnimatedRoutes />
+
+          {/* ── Wake-up toast ── */}
+          <SystemToast />
+        </div>
+      </Router>
+    </CortexSplineContext.Provider>
+  );
+}
+
+export default App;
