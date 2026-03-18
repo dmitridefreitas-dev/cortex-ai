@@ -128,6 +128,7 @@ function App() {
   const [theme, setTheme] = useState('light');
   const [activeIndex, setActiveIndex] = useState(null);
   const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [splineReady, setSplineReady] = useState(false);
   const splineRef = useRef(null);
 
   // Dark/light mode persistence
@@ -230,12 +231,12 @@ function App() {
           <motion.div
             className="fixed inset-0 w-screen h-screen z-0 cortex-spline"
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3, duration: 0.8, ease: 'easeOut' }}
+            animate={{ opacity: splineReady ? 1 : 0 }}
+            transition={{ duration: 1.2, ease: 'easeOut' }}
           >
             <Spline
               scene="https://prod.spline.design/9y6PsIQWoUD30A2L/scene.splinecode"
-              onLoad={(splineApp) => { splineRef.current = splineApp; }}
+              onLoad={(splineApp) => { splineRef.current = splineApp; setSplineReady(true); }}
               style={{ width: '100%', height: '100%', background: 'transparent' }}
             />
           </motion.div>
