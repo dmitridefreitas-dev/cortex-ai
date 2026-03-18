@@ -48,15 +48,15 @@ const FloatingCortex = () => {
         transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
         className="flex items-center gap-2.5 rounded-l-full pl-1.5 pr-5 py-1.5 cursor-pointer"
         style={{
-          background: 'rgba(15, 20, 35, 0.88)',
+          background: 'rgba(255, 255, 255, 0.85)',
           backdropFilter: 'blur(16px)',
           WebkitBackdropFilter: 'blur(16px)',
-          border: '1px solid rgba(0, 112, 243, 0.3)',
+          border: '1px solid rgba(0, 112, 243, 0.18)',
           borderRight: 'none',
-          boxShadow: '0 4px 28px rgba(0, 112, 243, 0.18), 0 0 0 1px rgba(0, 112, 243, 0.08)',
+          boxShadow: '0 4px 24px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(0, 112, 243, 0.06)',
         }}
         whileHover={{
-          boxShadow: '0 6px 36px rgba(0, 112, 243, 0.3), 0 0 0 1px rgba(0, 112, 243, 0.2)',
+          boxShadow: '0 6px 32px rgba(0, 112, 243, 0.15), 0 0 0 1px rgba(0, 112, 243, 0.12)',
         }}
       >
         <motion.div
@@ -74,7 +74,7 @@ const FloatingCortex = () => {
           <Bot className="h-4.5 w-4.5" strokeWidth={2.2} />
         </motion.div>
 
-        <span className="text-[13px] font-semibold text-white leading-tight whitespace-nowrap">
+        <span className="text-[13px] font-semibold leading-tight whitespace-nowrap" style={{ color: '#475569' }}>
           <span className="md:hidden">Chat with Cortex</span>
           <span className="hidden md:inline">Chat with Cortex AI</span>
         </span>
