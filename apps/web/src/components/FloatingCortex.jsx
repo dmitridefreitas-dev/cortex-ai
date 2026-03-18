@@ -5,12 +5,7 @@ import { Bot } from 'lucide-react';
 
 const FULL_X = '0%';
 const OFF_X = '100%';
-
 const FLOAT_DELAY_MS = 2000;
-
-const BREATH_DURATION = 4;
-const AVATAR_BREATH_SCALE = [1, 1.06, 1];
-const BUBBLE_BREATH_SCALE = [1, 1.04, 1];
 
 const FloatingCortex = () => {
   const [position, setPosition] = useState('off');
@@ -43,61 +38,46 @@ const FloatingCortex = () => {
       href={chatUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className="fixed z-[100] flex items-center gap-0"
+      className="fixed z-[100]"
       style={{ top: '5.5rem', right: 0 }}
       aria-label="Chat with Cortex - AI receptionist"
     >
       <motion.div
-        initial={{ x: OFF_X }}
-        animate={{ x }}
+        initial={{ x: OFF_X, opacity: 0 }}
+        animate={{ x, opacity: position === 'off' ? 0 : 1 }}
         transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
-        className="flex flex-col gap-2 items-end md:flex-row md:items-center"
+        className="flex items-center gap-2.5 rounded-l-full pl-1.5 pr-5 py-1.5 cursor-pointer"
+        style={{
+          background: 'rgba(15, 20, 35, 0.88)',
+          backdropFilter: 'blur(16px)',
+          WebkitBackdropFilter: 'blur(16px)',
+          border: '1px solid rgba(0, 112, 243, 0.3)',
+          borderRight: 'none',
+          boxShadow: '0 4px 28px rgba(0, 112, 243, 0.18), 0 0 0 1px rgba(0, 112, 243, 0.08)',
+        }}
+        whileHover={{
+          boxShadow: '0 6px 36px rgba(0, 112, 243, 0.3), 0 0 0 1px rgba(0, 112, 243, 0.2)',
+        }}
       >
         <motion.div
-          className="h-10 w-10 md:h-12 md:w-12 rounded-full flex items-center justify-center flex-shrink-0 cursor-pointer text-white border-2 border-white/20"
-          style={{ backgroundColor: 'var(--cortex-avatar-bg)' }}
+          className="h-9 w-9 rounded-full flex items-center justify-center flex-shrink-0 text-white"
+          style={{ background: '#0070F3' }}
           animate={{
-            scale: AVATAR_BREATH_SCALE,
             boxShadow: [
-              '0 10px 28px var(--cortex-glow)',
-              '0 14px 32px var(--cortex-glow-strong)',
-              '0 10px 28px var(--cortex-glow)',
+              '0 0 12px rgba(0, 112, 243, 0.4)',
+              '0 0 20px rgba(0, 112, 243, 0.6)',
+              '0 0 12px rgba(0, 112, 243, 0.4)',
             ],
           }}
-          transition={{
-            duration: BREATH_DURATION,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-          whileHover={{
-            scale: 1.1,
-            boxShadow: '0 16px 36px var(--cortex-glow-strong)',
-          }}
+          transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
         >
-          <Bot className="h-5 w-5 md:h-6 md:w-6" strokeWidth={2} />
+          <Bot className="h-4.5 w-4.5" strokeWidth={2.2} />
         </motion.div>
 
-        <motion.div
-          className="rounded-2xl px-3 py-2 shadow-lg border border-slate-200/80 bg-white dark:bg-slate-800 dark:border-slate-600/80 w-[7.5rem] md:w-auto max-w-[7.5rem] md:max-w-[220px]"
-          initial={{ opacity: 0 }}
-          animate={{
-            opacity: position === 'off' ? 0 : 1,
-            scale: position === 'off' ? 1 : BUBBLE_BREATH_SCALE,
-          }}
-          transition={{
-            opacity: { duration: 0.3 },
-            scale:
-              position === 'off'
-                ? { duration: 0.3 }
-                : { duration: BREATH_DURATION, repeat: Infinity, ease: 'easeInOut' },
-          }}
-        >
-          <p className="text-xs md:text-sm font-semibold text-slate-900 dark:text-slate-100 leading-snug">
-            <span className="md:hidden block">Hi, I'm Cortex.</span>
-            <span className="md:hidden block">Chat with me!</span>
-            <span className="hidden md:inline">Hi, I'm Cortex — your AI receptionist. Chat with me!</span>
-          </p>
-        </motion.div>
+        <span className="text-[13px] font-semibold text-white leading-tight whitespace-nowrap">
+          <span className="md:hidden">Chat with Cortex</span>
+          <span className="hidden md:inline">Chat with Cortex AI</span>
+        </span>
       </motion.div>
     </a>
   );
