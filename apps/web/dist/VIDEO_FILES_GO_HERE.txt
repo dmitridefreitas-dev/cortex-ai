@@ -1,0 +1,7 @@
+Drop your homepage videos in this folder (apps/web/public/) with these exact names:
+
+- receptionist.mp4  -> will load at /receptionist.mp4
+- ipad.mp4          -> will load at /ipad.mp4
+
+These are referenced by:
+- apps/web/src/pages/HomePage.jsx (VideoPreviewCard + modal)
