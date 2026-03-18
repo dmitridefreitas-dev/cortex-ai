@@ -1,0 +1,16 @@
+RewriteEngine On
+RewriteBase /
+
+# If the request is not already pointing into apps/web/dist
+RewriteCond %{REQUEST_URI} !^/apps/web/dist/
+
+# If a real file exists in the dist folder, serve it
+RewriteCond %{DOCUMENT_ROOT}/apps/web/dist%{REQUEST_URI} -f
+RewriteRule ^(.*)$ apps/web/dist/$1 [L]
+
+# If a real directory exists in the dist folder, serve it
+RewriteCond %{DOCUMENT_ROOT}/apps/web/dist%{REQUEST_URI} -d
+RewriteRule ^(.*)$ apps/web/dist/$1 [L]
+
+# SPA fallback: everything else goes to index.html
+RewriteRule ^(.*)$ apps/web/dist/index.html [L]
