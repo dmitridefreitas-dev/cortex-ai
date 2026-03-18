@@ -230,6 +230,7 @@ function App() {
               The canvas is at z-0; all UI sits at z-[5]+, so clicks on UI elements are never lost. */}
           <motion.div
             className="fixed inset-0 w-screen h-screen z-0 cortex-spline"
+            style={{ visibility: splineReady ? 'visible' : 'hidden' }}
             initial={{ opacity: 0 }}
             animate={{ opacity: splineReady ? 1 : 0 }}
             transition={{ duration: 1.2, ease: 'easeOut' }}

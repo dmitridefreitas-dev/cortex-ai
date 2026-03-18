@@ -92,7 +92,7 @@ const FloatingCortex = () => {
                 : { duration: BREATH_DURATION, repeat: Infinity, ease: 'easeInOut' },
           }}
         >
-          <p className="text-xs md:text-sm font-medium text-slate-800 dark:text-slate-100 leading-snug">
+          <p className="text-xs md:text-sm font-semibold text-slate-900 dark:text-slate-100 leading-snug">
             <span className="md:hidden block">Hi, I'm Cortex.</span>
             <span className="md:hidden block">Chat with me!</span>
             <span className="hidden md:inline">Hi, I'm Cortex — your AI receptionist. Chat with me!</span>
