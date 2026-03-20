@@ -66,7 +66,7 @@ const HomePage = () => {
         </p>
 
         <a
-          href="https://cortex-psi-eight.vercel.app/chat"
+          href="https://cortexbackend-fz18wxool-defreitasdmitri6-9057s-projects.vercel.app/chat"
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center gap-2 px-4 py-2 rounded-full text-white text-xs font-bold tracking-wide transition-all hover:scale-105 hover:shadow-lg active:scale-95"
@@ -84,7 +84,7 @@ const HomePage = () => {
         </a>
 
         <a
-          href="https://cortex-psi-eight.vercel.app/dashboard"
+          href="https://cortexbackend-fz18wxool-defreitasdmitri6-9057s-projects.vercel.app/dashboard-login"
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold tracking-wide transition-all hover:scale-105 active:scale-95"
