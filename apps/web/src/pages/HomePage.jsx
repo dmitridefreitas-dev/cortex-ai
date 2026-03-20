@@ -238,16 +238,17 @@ const HomePage = () => {
         </p>
       </motion.div>
 
-      {/* ── Top-right: Choose Portal pill (below chat bubble) ── */}
+      {/* ── Top-right: Choose Portal pill (moved here) ── */}
       <motion.div
-        className="fixed top-[10.5rem] right-8 z-[60] flex flex-col items-end gap-2.5"
+        className="fixed z-[60] flex flex-col items-end gap-1.5"
+        style={{ top: '15rem', right: '2rem' }}
         initial={{ opacity: 0, x: 20 }}
         animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 1, duration: 0.8, ease: 'easeOut' }}
+        transition={{ delay: 1.2, duration: 0.7, ease: 'easeOut' }}
       >
         <p
-          className="text-[10px] font-semibold tracking-widest uppercase mb-1 opacity-80"
-          style={{ color: '#475569', letterSpacing: '0.16em' }}
+          className="text-[10px] font-semibold tracking-widest uppercase mb-1"
+          style={{ color: '#94A3B8', letterSpacing: '0.14em' }}
         >
           Choose Portal
         </p>
