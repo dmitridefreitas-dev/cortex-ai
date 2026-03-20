@@ -65,65 +65,65 @@ const LiveCallLog = () => {
   return ReactDOM.createPortal(
     <div 
       className="fixed z-[150] pointer-events-none"
-      style={{ bottom: '3rem', left: '6.5rem', width: '420px' }}
+      style={{ top: '15.5rem', right: '2.5rem', width: '300px' }}
     >
-      <div className="flex flex-col items-start gap-3">
-        {/* Live Label */}
-        <motion.div 
-          className="mb-1 flex items-center justify-start gap-2.5 opacity-60 px-2"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.8 }}
-        >
-          <motion.div
-            animate={{ opacity: [1, 0.4, 1] }}
-            transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-          >
-            <Activity size={12} className="text-blue-600" />
-          </motion.div>
-          <span className="text-[10px] font-black uppercase tracking-[0.25em] text-slate-600">
-            Neural Activity Feed
-          </span>
-        </motion.div>
-
+      <div className="flex flex-col items-end gap-2.5">
         <AnimatePresence mode="popLayout" initial={false}>
           {logs.map((log) => (
             <motion.div
               key={log.id}
               layout
-              initial={{ opacity: 0, x: -15, scale: 0.96 }}
-              animate={{ opacity: 1, x: 0, scale: 1 }}
-              exit={{ opacity: 0, x: 15, scale: 0.96 }}
+              initial={{ opacity: 0, y: 12, scale: 0.96 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -12, scale: 0.96 }}
               transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
-              className="w-full flex flex-col p-4 rounded-[22px] border"
+              className="w-full flex flex-col p-3 rounded-2xl border"
               style={{
-                background: 'rgba(255, 255, 255, 0.65)',
-                backdropFilter: 'blur(18px)',
-                WebkitBackdropFilter: 'blur(18px)',
-                borderColor: 'rgba(37, 99, 235, 0.12)',
-                boxShadow: '0 8px 32px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04)',
+                background: 'rgba(255, 255, 255, 0.55)',
+                backdropFilter: 'blur(16px)',
+                WebkitBackdropFilter: 'blur(16px)',
+                borderColor: 'rgba(37, 99, 235, 0.1)',
+                boxShadow: '0 4px 16px rgba(0,0,0,0.04)',
               }}
             >
-              <div className="flex justify-between items-center mb-1.5">
-                <div className="flex items-center gap-2">
+              <div className="flex justify-between items-center mb-1">
+                <div className="flex items-center gap-1.5">
                   <div 
-                    className="w-2 h-2 rounded-full"
+                    className="w-1.5 h-1.5 rounded-full"
                     style={{ background: getTypeColor(log.type) }}
                   />
-                  <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">
+                  <span className="text-[9px] font-black uppercase tracking-widest text-slate-500">
                     {log.type.replace('_', ' ')}
                   </span>
                 </div>
-                <span className="text-[10px] font-semibold text-slate-400 font-mono">
+                <span className="text-[9px] font-medium text-slate-400 font-mono">
                   {log.time}
                 </span>
               </div>
-              <p className="text-[12.5px] font-bold text-slate-800 leading-tight">
+              <p className="text-[11.5px] font-semibold text-slate-700 leading-tight">
                 {log.content}
               </p>
             </motion.div>
           ))}
         </AnimatePresence>
       </div>
+      
+      {/* Live Label */}
+      <motion.div 
+        className="mt-3 flex items-center justify-end gap-2 opacity-50 px-2"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.6 }}
+      >
+        <span className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500">
+          Neural Feed Live
+        </span>
+        <motion.div
+          animate={{ opacity: [1, 0.4, 1] }}
+          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+        >
+          <Activity size={10} className="text-blue-500" />
+        </motion.div>
+      </motion.div>
     </div>,
     document.body
   );
