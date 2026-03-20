@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import ReactDOM from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Activity } from 'lucide-react';
 
@@ -43,7 +44,7 @@ const LiveCallLog = () => {
           type: template.type, 
           content 
         }];
-        return next.slice(-4); // Only keep recent 4
+        return next.slice(-4); 
       });
     }, 4500 + Math.random() * 2000);
 
@@ -61,27 +62,28 @@ const LiveCallLog = () => {
     }
   };
 
-  return (
+  return ReactDOM.createPortal(
     <div 
-      className="fixed z-[40] pointer-events-none"
-      style={{ top: '15rem', right: '2.5rem', width: '320px' }}
+      className="fixed z-[150] pointer-events-none"
+      style={{ top: '15.5rem', right: '2.5rem', width: '300px' }}
     >
-      <div className="flex flex-col items-end gap-2">
+      <div className="flex flex-col items-end gap-2.5">
         <AnimatePresence mode="popLayout" initial={false}>
           {logs.map((log) => (
             <motion.div
               key={log.id}
-              initial={{ opacity: 0, y: 15, scale: 0.95 }}
+              layout
+              initial={{ opacity: 0, y: 12, scale: 0.96 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -15, scale: 0.95 }}
-              transition={{ duration: 0.7, ease: [0.23, 1, 0.32, 1] }}
+              exit={{ opacity: 0, y: -12, scale: 0.96 }}
+              transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
               className="w-full flex flex-col p-3 rounded-2xl border"
               style={{
-                background: 'rgba(255, 255, 255, 0.35)',
-                backdropFilter: 'blur(12px)',
-                WebkitBackdropFilter: 'blur(12px)',
-                borderColor: 'rgba(37, 99, 235, 0.08)',
-                boxShadow: '0 4px 12px rgba(0,0,0,0.03)',
+                background: 'rgba(255, 255, 255, 0.55)',
+                backdropFilter: 'blur(16px)',
+                WebkitBackdropFilter: 'blur(16px)',
+                borderColor: 'rgba(37, 99, 235, 0.1)',
+                boxShadow: '0 4px 16px rgba(0,0,0,0.04)',
               }}
             >
               <div className="flex justify-between items-center mb-1">
@@ -110,7 +112,7 @@ const LiveCallLog = () => {
       <motion.div 
         className="mt-3 flex items-center justify-end gap-2 opacity-50 px-2"
         initial={{ opacity: 0 }}
-        animate={{ opacity: 0.4 }}
+        animate={{ opacity: 0.6 }}
       >
         <span className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500">
           Neural Feed Live
@@ -122,7 +124,8 @@ const LiveCallLog = () => {
           <Activity size={10} className="text-blue-500" />
         </motion.div>
       </motion.div>
-    </div>
+    </div>,
+    document.body
   );
 };
 
