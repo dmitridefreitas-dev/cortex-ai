@@ -82,25 +82,33 @@ const LiveCallLog = () => {
                 background: 'rgba(255, 255, 255, 0.08)',
                 backdropFilter: 'blur(20px)',
                 WebkitBackdropFilter: 'blur(20px)',
-                borderColor: 'rgba(37, 99, 235, 0.05)',
-                boxShadow: '0 4px 20px rgba(0,0,0,0.02)',
+                borderColor: 'rgba(37, 99, 235, 0.15)',
+                boxShadow: '0 4px 20px rgba(0,0,0,0.03)',
               }}
+              animate={{
+                boxShadow: [
+                  '0 0 0 0px rgba(37, 99, 235, 0)',
+                  '0 0 10px 1px rgba(37, 99, 235, 0.05)',
+                  '0 0 0 0px rgba(37, 99, 235, 0)'
+                ]
+              }}
+              transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
             >
               <div className="flex justify-between items-center mb-1">
-                <div className="flex items-center gap-1.5 opacity-60">
+                <div className="flex items-center gap-1.5">
                   <div 
-                    className="w-1.5 h-1.5 rounded-full shadow-[0_0_8px_rgba(0,112,243,0.5)]"
+                    className="w-2 h-2 rounded-full shadow-[0_0_8px_rgba(0,112,243,0.5)]"
                     style={{ background: getTypeColor(log.type) }}
                   />
-                  <span className="text-[9px] font-black uppercase tracking-[0.12em]" style={{ color: '#475569' }}>
+                  <span className="text-[9px] font-black uppercase tracking-[0.14em]" style={{ color: '#334155' }}>
                     {log.type.replace('_', ' ')}
                   </span>
                 </div>
-                <span className="text-[9px] font-medium text-slate-400 font-mono opacity-50">
+                <span className="text-[9px] font-bold text-slate-500 font-mono">
                   {log.time}
                 </span>
               </div>
-              <p className="text-[11px] font-semibold text-slate-600 leading-tight">
+              <p className="text-[11px] font-semibold text-slate-700 leading-tight">
                 {log.content}
               </p>
             </motion.div>
@@ -110,18 +118,22 @@ const LiveCallLog = () => {
       
       {/* Live Label */}
       <motion.div 
-        className="mt-3 flex items-center justify-end gap-2 px-2"
+        className="mt-3 flex items-center justify-end gap-2.5 px-2"
         initial={{ opacity: 0 }}
-        animate={{ opacity: 0.5 }}
+        animate={{ opacity: 0.85 }}
       >
-        <span className="text-[9px] font-black uppercase tracking-[0.25em] text-slate-400">
+        <span className="text-[9px] font-black uppercase tracking-[0.28em] text-slate-600">
           Neural activity feed
         </span>
         <motion.div
-          animate={{ opacity: [1, 0.4, 1], scale: [1, 1.1, 1] }}
-          transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
+          animate={{ 
+            opacity: [1, 0.5, 1], 
+            scale: [1, 1.15, 1],
+            filter: ['drop-shadow(0 0 0px rgba(37,99,235,0))', 'drop-shadow(0 0 4px rgba(37,99,235,0.6))', 'drop-shadow(0 0 0px rgba(37,99,235,0))']
+          }}
+          transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
         >
-          <Activity size={10} className="text-blue-500" />
+          <Activity size={10} className="text-blue-600" />
         </motion.div>
       </motion.div>
     </div>,

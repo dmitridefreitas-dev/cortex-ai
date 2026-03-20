@@ -240,14 +240,14 @@ const HomePage = () => {
 
       {/* ── Top-right: Choose Portal pill (below chat bubble) ── */}
       <motion.div
-        className="fixed top-[14rem] right-8 z-[60] flex flex-col items-end gap-2.5"
+        className="fixed top-[10.5rem] right-8 z-[60] flex flex-col items-end gap-2.5"
         initial={{ opacity: 0, x: 20 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 1, duration: 0.8, ease: 'easeOut' }}
       >
         <p
-          className="text-[10px] font-semibold tracking-widest uppercase mb-1 opacity-60"
-          style={{ color: '#64748B', letterSpacing: '0.14em' }}
+          className="text-[10px] font-semibold tracking-widest uppercase mb-1 opacity-80"
+          style={{ color: '#475569', letterSpacing: '0.16em' }}
         >
           Choose Portal
         </p>
