@@ -238,60 +238,65 @@ const HomePage = () => {
         </p>
       </motion.div>
 
-      {/* ── Top-right: Choose Portal pill (moved here) ── */}
-      <motion.div
-        className="fixed z-[60] flex flex-col items-end gap-1.5"
-        style={{ top: '15rem', right: '2rem' }}
-        initial={{ opacity: 0, x: 20 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 1.2, duration: 0.7, ease: 'easeOut' }}
-      >
-        <p
-          className="text-[10px] font-semibold tracking-widest uppercase mb-1"
-          style={{ color: '#94A3B8', letterSpacing: '0.14em' }}
+      {/* ── Top-right: Choose Portal pill (rendered via portal for safety) ── */}
+      {ReactDOM.createPortal(
+        <motion.div
+          className="fixed z-[150] flex flex-col items-end gap-2"
+          style={{ top: '14rem', right: '2rem' }}
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 1, duration: 0.7, ease: 'easeOut' }}
         >
-          Choose Portal
-        </p>
+          <p
+            className="text-[10px] font-semibold tracking-widest uppercase mb-1"
+            style={{ color: '#94A3B8', letterSpacing: '0.14em' }}
+          >
+            Choose Portal
+          </p>
 
-        <a
-          href="https://cortexbackend-fz18wxool-defreitasdmitri6-9057s-projects.vercel.app/chat"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-2 px-4 py-2 rounded-full text-white text-xs font-bold tracking-wide transition-all hover:scale-105 hover:shadow-lg active:scale-95"
-          style={{
-            background: CORTEX_BLUE,
-            boxShadow: `0 4px 20px rgba(0,112,243,0.35)`,
-            fontFamily: '"Inter Tight", sans-serif',
-          }}
-        >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-            <circle cx="12" cy="7" r="4" />
-          </svg>
-          Patient Portal
-        </a>
+          <a
+            href="https://cortexbackend-fz18wxool-defreitasdmitri6-9057s-projects.vercel.app/chat"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 px-4 py-2 rounded-full text-white text-xs font-bold tracking-wide transition-all hover:scale-105 hover:shadow-lg active:scale-95"
+            style={{
+              background: CORTEX_BLUE,
+              boxShadow: `0 4px 20px rgba(0,112,243,0.35)`,
+              fontFamily: '"Inter Tight", sans-serif',
+              pointerEvents: 'auto',
+            }}
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+            Patient Portal
+          </a>
 
-        <button
-          onClick={handleStaffClick}
-          className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold tracking-wide transition-all hover:scale-105 active:scale-95 cursor-pointer"
-          style={{
-            color: CORTEX_BLUE,
-            border: `1px solid ${CORTEX_BLUE}50`,
-            background: `${CORTEX_BLUE}0D`,
-            backdropFilter: 'blur(8px)',
-            WebkitBackdropFilter: 'blur(8px)',
-            fontFamily: '"Inter Tight", sans-serif',
-          }}
-        >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <rect x="3" y="3" width="7" height="7" />
-            <rect x="14" y="3" width="7" height="7" />
-            <rect x="14" y="14" width="7" height="7" />
-            <rect x="3" y="14" width="7" height="7" />
-          </svg>
-          Staff Dashboard
-        </button>
-      </motion.div>
+          <button
+            onClick={handleStaffClick}
+            className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold tracking-wide transition-all hover:scale-105 active:scale-95 cursor-pointer"
+            style={{
+              color: CORTEX_BLUE,
+              border: `1px solid ${CORTEX_BLUE}50`,
+              background: `rgba(0,112,243,0.06)`,
+              backdropFilter: 'blur(8px)',
+              WebkitBackdropFilter: 'blur(8px)',
+              fontFamily: '"Inter Tight", sans-serif',
+              pointerEvents: 'auto',
+            }}
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="3" y="3" width="7" height="7" />
+              <rect x="14" y="3" width="7" height="7" />
+              <rect x="14" y="14" width="7" height="7" />
+              <rect x="3" y="14" width="7" height="7" />
+            </svg>
+            Staff Dashboard
+          </button>
+        </motion.div>,
+        document.body
+      )}
       
       {/* ── Low-level Vignette Overlay ── */}
       <div 
