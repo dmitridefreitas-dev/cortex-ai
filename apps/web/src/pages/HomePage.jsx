@@ -289,6 +289,15 @@ const HomePage = () => {
           Staff Dashboard
         </button>
       </motion.div>
+      
+      {/* ── Low-level Vignette Overlay ── */}
+      <div 
+        className="fixed inset-0 pointer-events-none z-[40]" 
+        style={{ 
+          background: 'radial-gradient(circle at center, transparent 30%, rgba(15, 23, 42, 0.04) 100%)' 
+        }}
+      />
+
 
       {/* ── Staff Password Modal (rendered via portal into document.body) ── */}
       {showModal && <StaffModal onClose={() => setShowModal(false)} />}
