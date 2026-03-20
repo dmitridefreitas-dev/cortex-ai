@@ -236,7 +236,7 @@ function App() {
             transition={{ duration: 1.2, ease: 'easeOut' }}
           >
             <Spline
-              scene="https://prod.spline.design/9y6PsIQWoUD30A2L/scene.splinecode"
+              scene="/scene.splinecode"
               onLoad={(splineApp) => { splineRef.current = splineApp; setSplineReady(true); }}
               style={{ width: '100%', height: '100%', background: 'transparent' }}
             />
