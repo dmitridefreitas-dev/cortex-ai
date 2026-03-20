@@ -294,7 +294,7 @@ const HomePage = () => {
       <div 
         className="fixed inset-0 pointer-events-none z-[40]" 
         style={{ 
-          background: 'radial-gradient(circle at center, transparent 45%, rgba(15, 23, 42, 0.06) 100%)' 
+          background: 'radial-gradient(circle at center, transparent 35%, rgba(0, 0, 0, 0.28) 100%)' 
         }}
       />
 
