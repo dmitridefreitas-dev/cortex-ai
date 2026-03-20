@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import { Helmet } from 'react-helmet';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Lock, X, AlertCircle } from 'lucide-react';
+import LiveCallLog from '../components/LiveCallLog.jsx';
+
 
 const CORTEX_BLUE = '#0070F3';
 const STAFF_DASHBOARD_URL = 'https://cortexbackend-fz18wxool-defreitasdmitri6-9057s-projects.vercel.app/dashboard';
@@ -301,6 +303,8 @@ const HomePage = () => {
 
       {/* ── Staff Password Modal (rendered via portal into document.body) ── */}
       {showModal && <StaffModal onClose={() => setShowModal(false)} />}
+
+      <LiveCallLog />
     </>
   );
 };
