@@ -65,7 +65,7 @@ const LiveCallLog = () => {
   return ReactDOM.createPortal(
     <div 
       className="fixed z-[150] pointer-events-none"
-      style={{ top: '15.5rem', right: '2.5rem', width: '300px' }}
+      style={{ bottom: '2rem', right: '2.5rem', width: '300px' }}
     >
       <div className="flex flex-col items-end gap-2.5">
         <AnimatePresence mode="popLayout" initial={false}>
