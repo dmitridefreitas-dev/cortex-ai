@@ -31,53 +31,50 @@ const FloatingCortex = () => {
 
   if (mobileMenuOpen) return null;
 
-  const chatUrl = 'https://cortex-psi-eight.vercel.app/chat';
+  const chatUrl = 'https://cortexbackend-fz18wxool-defreitasdmitri6-9057s-projects.vercel.app/chat';
 
   return (
     <a
-      href={chatUrl}
+      href="https://cortexbackend-fz18wxool-defreitasdmitri6-9057s-projects.vercel.app/chat"
       target="_blank"
       rel="noopener noreferrer"
-      className="fixed z-[100]"
-      style={{ top: '5.5rem', right: 0 }}
+      className="fixed z-[100] flex items-center"
+      style={{ top: '6rem', right: '2rem' }}
       aria-label="Chat with Cortex - AI receptionist"
     >
+      {/* Fade-in on mount */}
       <motion.div
-        initial={{ x: OFF_X, opacity: 0 }}
-        animate={{ x, opacity: position === 'off' ? 0 : 1 }}
-        transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
-        className="flex items-center gap-2.5 rounded-l-full pl-1.5 pr-5 py-1.5 cursor-pointer"
-        style={{
-          background: 'rgba(255, 255, 255, 0.85)',
-          backdropFilter: 'blur(16px)',
-          WebkitBackdropFilter: 'blur(16px)',
-          border: '1px solid rgba(0, 112, 243, 0.18)',
-          borderRight: 'none',
-          boxShadow: '0 4px 24px rgba(0, 0, 0, 0.06), 0 0 0 1px rgba(0, 112, 243, 0.06)',
-        }}
-        whileHover={{
-          boxShadow: '0 6px 32px rgba(0, 112, 243, 0.15), 0 0 0 1px rgba(0, 112, 243, 0.12)',
-        }}
+        initial={{ opacity: 0, scale: 0.92 }}
+        animate={{ opacity: position === 'off' ? 0 : 1, scale: position === 'off' ? 0.92 : 1 }}
+        transition={{ duration: 0.6, ease: 'easeOut' }}
       >
+        {/* Breathing wrapper — icon + bubble move together */}
         <motion.div
-          className="h-9 w-9 rounded-full flex items-center justify-center flex-shrink-0 text-white"
-          style={{ background: '#0070F3' }}
-          animate={{
-            boxShadow: [
-              '0 0 12px rgba(0, 112, 243, 0.4)',
-              '0 0 20px rgba(0, 112, 243, 0.6)',
-              '0 0 12px rgba(0, 112, 243, 0.4)',
-            ],
-          }}
-          transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+          className="flex items-center gap-3 cursor-pointer"
+          animate={{ scale: [1, 1.035, 1], opacity: [1, 0.92, 1] }}
+          transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut', repeatType: 'loop' }}
         >
-          <Bot className="h-4.5 w-4.5" strokeWidth={2.2} />
-        </motion.div>
+          {/* Icon circle */}
+          <div
+            className="h-12 w-12 rounded-full flex items-center justify-center flex-shrink-0 text-white"
+            style={{ background: '#2563eb', boxShadow: '0 4px 20px rgba(37, 99, 235, 0.45)' }}
+          >
+            <Bot className="h-6 w-6" strokeWidth={2} />
+          </div>
 
-        <span className="text-[13px] font-semibold leading-tight whitespace-nowrap" style={{ color: '#475569' }}>
-          <span className="md:hidden">Chat with Cortex</span>
-          <span className="hidden md:inline">Chat with Cortex AI</span>
-        </span>
+          {/* Chat bubble */}
+          <div
+            className="bg-[#eff2fc] border border-blue-100/50 shadow-sm px-4 py-2.5 rounded-[20px] rounded-tl-sm"
+            style={{ boxShadow: '0 2px 12px rgba(0,0,0,0.07)' }}
+          >
+            <p className="text-[13.5px] font-medium text-[#1e293b] leading-snug">
+              Hi, I'm Cortex — your AI
+            </p>
+            <p className="text-[13.5px] font-medium text-[#1e293b] leading-snug">
+              receptionist. Chat with me!
+            </p>
+          </div>
+        </motion.div>
       </motion.div>
     </a>
   );

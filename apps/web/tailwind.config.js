@@ -17,7 +17,30 @@ module.exports = {
     },
     extend: {
       colors: {
-        /* Professional white & blue palette */
+        /* Semantic Enterprise Tokens */
+        brand: {
+          primary: "hsl(var(--brand-primary))",
+          secondary: "hsl(var(--brand-secondary))",
+          accent: "hsl(var(--brand-accent))",
+        },
+        status: {
+          success: "hsl(var(--status-success))",
+          warning: "hsl(var(--status-warning))",
+          error: "hsl(var(--status-error))",
+          info: "hsl(var(--status-info))",
+        },
+        surface: {
+          base: "hsl(var(--background))",
+          elevated: "hsl(var(--surface-elevated))",
+          card: "hsl(var(--card))",
+          popover: "hsl(var(--popover))",
+        },
+        text: {
+          primary: "hsl(var(--foreground))",
+          secondary: "hsl(var(--muted-foreground))",
+          accent: "hsl(var(--brand-primary))",
+        },
+        /* Legacy palette support */
         primaryBlue: '#2563EB',
         primaryBlueLight: '#2563EB',
         primaryBlueSoft: '#EFF6FF',

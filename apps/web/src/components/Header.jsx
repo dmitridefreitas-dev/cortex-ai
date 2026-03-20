@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { Menu, Moon, Stethoscope, Sun, Bot } from 'lucide-react';
 
-const CORTEX_CHAT_URL = 'https://cortex-psi-eight.vercel.app/chat';
+const CORTEX_CHAT_URL = 'https://cortexbackend-fz18wxool-defreitasdmitri6-9057s-projects.vercel.app/chat';
 
 const Header = ({ theme, onToggleTheme }) => {
   const [isOpen, setIsOpen] = useState(false);

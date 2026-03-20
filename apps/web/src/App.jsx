@@ -8,6 +8,9 @@ import FeaturesPage from './pages/FeaturesPage.jsx';
 import BlogPage from './pages/BlogPage.jsx';
 import TrustPage from './pages/TrustPage.jsx';
 import ContactPage from './pages/ContactPage.jsx';
+import LoginPage from './pages/LoginPage.jsx';
+import PortalPage from './pages/PortalPage.jsx';
+import AIPlayground from './components/AIPlayground.jsx';
 import { AnimatePresence, motion } from 'framer-motion';
 import Spline from '@splinetool/react-spline';
 
@@ -105,6 +108,9 @@ function AnimatedRoutes() {
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/trust" element={<TrustPage />} />
           <Route path="/contact" element={<ContactPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/portal" element={<PortalPage />} />
+          <Route path="/ai-playground" element={<AIPlayground />} />
           <Route
             path="*"
             element={
@@ -131,22 +137,12 @@ function App() {
   const [splineReady, setSplineReady] = useState(false);
   const splineRef = useRef(null);
 
-  // Dark/light mode persistence
+  // Removed dark mode persistence entirely
   useEffect(() => {
-    const saved = localStorage.getItem('theme');
-    if (saved === 'light' || saved === 'dark') {
-      setTheme(saved);
-      return;
-    }
-    const prefersDark = window.matchMedia?.('(prefers-color-scheme: dark)')?.matches;
-    setTheme(prefersDark ? 'dark' : 'light');
+    setTheme('light');
+    document.documentElement.classList.remove('dark');
+    localStorage.removeItem('theme');
   }, []);
-
-  useEffect(() => {
-    const root = document.documentElement;
-    root.classList.toggle('dark', theme === 'dark');
-    localStorage.setItem('theme', theme);
-  }, [theme]);
 
   // Color themes (only blue + black remain)
   const COLOR_THEME_KEY = 'colorTheme';
