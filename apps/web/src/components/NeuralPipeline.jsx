@@ -150,12 +150,12 @@ export default function NeuralPipeline() {
   const pathLength = useTransform(scrollYProgress, [0, 1], [0, 1]);
 
   return (
-    <section ref={sectionRef} className="relative" style={{ height: '400vh' }}>
+    <section ref={sectionRef} className="relative" style={{ height: '280vh', background: '#050A14' }}>
       {/* Sticky wrapper */}
-      <div className="sticky top-0 h-screen overflow-hidden flex flex-col justify-center">
+      <div className="sticky top-0 h-screen overflow-hidden flex flex-col justify-center" style={{ background: '#050A14' }}>
 
         {/* Section header */}
-        <div className="text-center pt-10 pb-8 px-6 shrink-0">
+        <div className="text-center pt-6 pb-4 px-6 shrink-0">
           <motion.p
             className="text-[10px] font-black uppercase tracking-[0.4em] text-blue-500 mb-3"
             initial={{ opacity: 0, y: 10 }}
@@ -259,7 +259,7 @@ export default function NeuralPipeline() {
         </div>
 
         {/* Scroll progress indicators */}
-        <div className="flex justify-center gap-2 pb-8 shrink-0">
+        <div className="flex justify-center gap-2 pb-5 shrink-0">
           {STEPS.map((s, i) => (
             <div key={s.id} className="w-6 h-1 rounded-full bg-white/10 overflow-hidden">
               <motion.div

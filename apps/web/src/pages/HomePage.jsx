@@ -237,20 +237,11 @@ const HomePage = () => {
         </div>
 
         {/* ── Spacer for Scroll Fade ── */}
-        <div style={{ height: '70vh' }} className="pointer-events-none w-full" />
+        <div style={{ height: '20vh' }} className="pointer-events-none w-full" />
 
-        {/* ── Second Fullscreen Card (Scroll Target) ── */}
-        <div className="relative w-full min-h-[90vh] z-[100] flex flex-col items-center pt-24 pb-32 px-4 md:px-12 pointer-events-auto">
-          <motion.div
-            initial={{ opacity: 0, rotateX: 35, y: 120, scale: 0.9 }}
-            whileInView={{ opacity: 1, rotateX: 0, y: 0, scale: 1 }}
-            viewport={{ once: false, amount: 0.1, margin: "0px 0px -100px 0px" }}
-            transition={{ type: "spring", stiffness: 60, damping: 20, duration: 1 }}
-            className="w-full max-w-7xl aspect-[4/3] md:aspect-[16/9] bg-background rounded-[2rem] shadow-[0_40px_100px_rgba(0,0,0,0.6)] flex items-center justify-center p-8 overflow-hidden relative"
-            style={{ transformPerspective: 1600 }}
-          >
-            <DashboardReveal />
-          </motion.div>
+        {/* ── Dashboard Section (Fullscreen) ── */}
+        <div className="relative w-full z-[100] pointer-events-auto">
+          <DashboardReveal />
         </div>
 
         {/* ── Neural Pipeline Section ── */}
