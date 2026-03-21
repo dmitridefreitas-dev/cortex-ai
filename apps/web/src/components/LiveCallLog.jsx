@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { Activity } from 'lucide-react';
 
 const LOG_TEMPLATES = [
@@ -25,6 +25,11 @@ const LiveCallLog = () => {
     { id: 3, time: '12:04:31', type: 'EMR_SYNC', content: 'Record updated → Dr. Mitch' },
   ]);
   const logIdCounter = useRef(10);
+
+  const { scrollY } = useScroll();
+  const opacityOut = useTransform(scrollY, [0, 400], [1, 0]);
+  const scaleOut = useTransform(scrollY, [0, 400], [1, 0.9]);
+  const blurOut = useTransform(scrollY, [0, 400], ['blur(0px)', 'blur(10px)']);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -53,78 +58,120 @@ const LiveCallLog = () => {
 
   const getTypeColor = (type) => {
     switch (type) {
-      case 'INBOUND_CALL': return '#3b82f6';
-      case 'AI_STATUS':    return '#10b981';
-      case 'EMR_SYNC':     return '#8b5cf6';
-      case 'APPOINTMENT':  return '#f59e0b';
-      case 'STAGING':      return '#64748b';
-      default:             return '#94a3b8';
+      case 'INBOUND_CALL': return '#3b82f6'; // Blue
+      case 'AI_STATUS':    return '#0F172A'; // Black/Dark Slate
+      case 'EMR_SYNC':     return '#64748b'; // Gray
+      case 'APPOINTMENT':  return '#3b82f6'; // Blue
+      case 'STAGING':      return '#94a3b8'; // Light Gray
+      default:             return '#000000'; // Black
     }
   };
 
   return ReactDOM.createPortal(
-    <div 
+    <motion.div 
       className="fixed z-[150] pointer-events-none"
-      style={{ bottom: '2rem', right: '2.5rem', width: '300px' }}
+      style={{ 
+        bottom: '2rem', right: '2.5rem', width: '300px',
+        opacity: opacityOut, 
+        scale: scaleOut, 
+        filter: blurOut 
+      }}
     >
-      <div className="flex flex-col items-end gap-2.5">
-        <AnimatePresence mode="popLayout" initial={false}>
-          {logs.map((log) => (
-            <motion.div
-              key={log.id}
-              layout
-              initial={{ opacity: 0, y: 12, scale: 0.96 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -12, scale: 0.96 }}
-              transition={{ duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
-              className="w-full flex flex-col p-3 rounded-2xl border"
-              style={{
-                background: 'rgba(255, 255, 255, 0.55)',
-                backdropFilter: 'blur(16px)',
-                WebkitBackdropFilter: 'blur(16px)',
-                borderColor: 'rgba(37, 99, 235, 0.1)',
-                boxShadow: '0 4px 16px rgba(0,0,0,0.04)',
-              }}
-            >
-              <div className="flex justify-between items-center mb-1">
-                <div className="flex items-center gap-1.5">
-                  <div 
-                    className="w-1.5 h-1.5 rounded-full"
-                    style={{ background: getTypeColor(log.type) }}
-                  />
-                  <span className="text-[9px] font-black uppercase tracking-widest text-slate-500">
-                    {log.type.replace('_', ' ')}
+      <div 
+        className="flex flex-col items-end"
+        style={{
+          maskImage: 'linear-gradient(to top, black 80%, transparent 100%)',
+          WebkitMaskImage: 'linear-gradient(to top, black 80%, transparent 100%)',
+        }}
+      >
+        <div
+          style={{
+            background: 'rgba(6, 10, 22, 0.82)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            border: '1px solid rgba(255, 255, 255, 0.09)',
+            borderRadius: '1rem',
+            boxShadow: '0 16px 48px rgba(0,0,0,0.35)',
+            overflow: 'hidden',
+            width: '100%',
+          }}
+        >
+          <AnimatePresence mode="popLayout" initial={false}>
+            {logs.map((log, i) => (
+              <motion.div
+                key={log.id}
+                layout
+                initial={{ opacity: 0, y: 20, scale: 0.98 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, x: 20, transition: { duration: 0.4 } }}
+                transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
+                className="w-full flex flex-col px-3 py-2.5"
+                style={{
+                  borderTop: i > 0 ? '1px solid rgba(255, 255, 255, 0.06)' : 'none',
+                }}
+              >
+                <div className="flex justify-between items-center mb-1">
+                  <div className="flex items-center gap-2">
+                    <div 
+                      className="w-1.5 h-1.5 rounded-full"
+                      style={{ background: getTypeColor(log.type), boxShadow: `0 0 8px ${getTypeColor(log.type)}` }}
+                    />
+                    <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">
+                      {log.type.replace('_', ' ')}
+                    </span>
+                  </div>
+                  <span className="text-[9px] font-medium text-slate-500 font-mono">
+                    {log.time}
                   </span>
                 </div>
-                <span className="text-[9px] font-medium text-slate-400 font-mono">
-                  {log.time}
-                </span>
-              </div>
-              <p className="text-[11.5px] font-semibold text-slate-700 leading-tight">
-                {log.content}
-              </p>
-            </motion.div>
-          ))}
-        </AnimatePresence>
+                <p className="text-[11.5px] font-semibold text-slate-100 leading-snug">
+                  {log.content}
+                </p>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </div>
       </div>
       
       {/* Live Label */}
       <motion.div 
-        className="mt-3 flex items-center justify-end gap-2 opacity-50 px-2"
+        className="mt-3 flex items-center justify-end gap-2 px-2"
         initial={{ opacity: 0 }}
-        animate={{ opacity: 0.6 }}
+        animate={{ opacity: 1 }}
       >
-        <span className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-500">
+        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-blue-500">
           Neural Feed Live
         </span>
-        <motion.div
-          animate={{ opacity: [1, 0.4, 1] }}
-          transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-        >
-          <Activity size={10} className="text-blue-500" />
-        </motion.div>
+        <div className="flex items-center">
+          <svg
+            width="24"
+            height="16"
+            viewBox="0 0 24 16"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="text-blue-500"
+          >
+            <motion.path
+              d="M0 8 L6 8 L9 2 L12 14 L15 8 L24 8"
+              initial={{ pathLength: 0, opacity: 0 }}
+              animate={{ 
+                pathLength: [0, 1],
+                opacity: [0, 1, 1, 0]
+              }}
+              transition={{ 
+                duration: 1.5,
+                repeat: Infinity,
+                ease: "linear",
+                times: [0, 0.1, 0.8, 1]
+              }}
+            />
+          </svg>
+        </div>
       </motion.div>
-    </div>,
+    </motion.div>,
     document.body
   );
 };

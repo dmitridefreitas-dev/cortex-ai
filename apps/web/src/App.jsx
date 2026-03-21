@@ -13,6 +13,7 @@ import PortalPage from './pages/PortalPage.jsx';
 import AIPlayground from './components/AIPlayground.jsx';
 import { AnimatePresence, motion } from 'framer-motion';
 import Spline from '@splinetool/react-spline';
+import { ReactLenis } from '@studio-freight/react-lenis';
 
 // ── Shared context for Spline ref, gaze sync, and glow state ──────────────────
 export const CortexSplineContext = createContext({
@@ -51,17 +52,17 @@ function SystemToast() {
     <AnimatePresence>
       {visible && (
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 10 }}
+          exit={{ opacity: 0, y: -10 }}
           transition={{ delay: 1.6, duration: 0.5, ease: 'easeOut' }}
-          className="fixed bottom-6 right-6 z-[200] flex items-center gap-2 px-4 py-2.5 rounded-full"
+          className="fixed top-[3.4rem] right-[2rem] z-[200] flex items-center gap-2 px-3.5 py-2 rounded-full"
           style={{
-            backdropFilter: 'blur(20px)',
-            WebkitBackdropFilter: 'blur(20px)',
-            background: 'rgba(255, 255, 255, 0.12)',
-            border: '1px solid rgba(255, 255, 255, 0.2)',
-            boxShadow: '0 4px 24px rgba(0, 0, 0, 0.12)',
+            backdropFilter: 'blur(16px)',
+            WebkitBackdropFilter: 'blur(16px)',
+            background: 'rgba(255, 255, 255, 0.2)',
+            border: '1px solid rgba(0, 112, 243, 0.1)',
+            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.05)',
           }}
         >
           <span
@@ -73,8 +74,8 @@ function SystemToast() {
             }}
           />
           <span
-            className="text-xs font-semibold tracking-widest uppercase"
-            style={{ color: '#1e293b', letterSpacing: '0.12em' }}
+            className="text-[10px] font-semibold tracking-widest uppercase"
+            style={{ color: '#475569', letterSpacing: '0.12em' }}
           >
             System Online
           </span>
@@ -216,11 +217,12 @@ function App() {
 
   return (
     <CortexSplineContext.Provider value={contextValue}>
-      <Router>
-        <div
-          className="overflow-hidden h-screen w-screen bg-background text-foreground font-sans selection:bg-primary/20 selection:text-foreground"
-          style={{ position: 'relative' }}
-        >
+      <ReactLenis root>
+        <Router>
+          <div
+            className="min-h-screen w-full overflow-x-hidden bg-background text-foreground font-sans selection:bg-primary/20 selection:text-foreground"
+            style={{ position: 'relative' }}
+          >
           {/* ── Fullscreen Spline background ── */}
           {/* pointer-events must remain ON so the Spline canvas receives mousemove for head tracking.
               The canvas is at z-0; all UI sits at z-[5]+, so clicks on UI elements are never lost. */}
@@ -251,15 +253,21 @@ function App() {
             transition={{ duration: 0.4, ease: 'easeInOut' }}
           />
 
-          {/* ── Sidebar, routes, floating chat ── */}
-          <HolographicSidebar />
-          <FloatingCortex />
-          <AnimatedRoutes />
-
-          {/* ── Wake-up toast ── */}
-          <SystemToast />
+          {/* ── Sidebar, routes, floating chat ── synchronized with Spline ── */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: splineReady ? 1 : 0 }}
+            transition={{ duration: 1.5, ease: 'easeOut', delay: 0.2 }}
+            className="relative z-[10] w-full"
+          >
+            <HolographicSidebar />
+            <FloatingCortex />
+            <AnimatedRoutes />
+            <SystemToast />
+          </motion.div>
         </div>
-      </Router>
+        </Router>
+      </ReactLenis>
     </CortexSplineContext.Provider>
   );
 }

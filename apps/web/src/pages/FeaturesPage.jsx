@@ -207,7 +207,7 @@ const FeaturesPage = () => {
                 {versions.map((version, vIndex) => {
                   const Icon = version.icon;
                   return (
-                  <Card key={vIndex} className="bg-white dark:bg-card/95 border-border hover:border-primary hover:shadow-glow-soft transition-all duration-300 hover:-translate-y-1 rounded-2xl flex flex-col h-full">
+                  <Card key={vIndex} className="bg-background dark:bg-card/95 border-border hover:border-primary hover:shadow-glow-soft transition-all duration-300 hover:-translate-y-1 rounded-2xl flex flex-col h-full">
                     <CardHeader className="pb-2 pt-4 px-4 lg:px-5">
                     <div className="flex items-start justify-between gap-4">
                         <div>

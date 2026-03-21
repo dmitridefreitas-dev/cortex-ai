@@ -1,9 +1,14 @@
 import React, { useRef, useState } from 'react';
 import ReactDOM from 'react-dom';
 import { Helmet } from 'react-helmet';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { Lock, X, AlertCircle } from 'lucide-react';
 import LiveCallLog from '../components/LiveCallLog.jsx';
+import PortalButtons from '../components/PortalButtons.jsx';
+import DashboardReveal from '../components/DashboardReveal';
+import NeuralPipeline from '../components/NeuralPipeline';
+import IntegrationsROI from '../components/IntegrationsROI';
+import FinalCTA from '../components/FinalCTA';
 
 
 const CORTEX_BLUE = '#0070F3';
@@ -186,6 +191,12 @@ const StaffModal = ({ onClose, onSuccess }) => {
 const HomePage = () => {
   const [showModal, setShowModal] = useState(false);
 
+  // ── Scroll Tracking for Hero Transitions ──
+  const { scrollY } = useScroll();
+  const heroOpacity = useTransform(scrollY, [600, 1000], [1, 0]);
+  const heroScale = useTransform(scrollY, [600, 1000], [1, 0.85]);
+  const heroY = useTransform(scrollY, [600, 1000], [0, -40]);
+
   const handleStaffClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -202,106 +213,58 @@ const HomePage = () => {
         />
       </Helmet>
 
-      {/* ── Top-center branding ── */}
-      <motion.div
-        className="fixed top-8 left-1/2 -translate-x-1/2 z-[50] flex flex-col items-center pointer-events-none"
-        initial={{ opacity: 0, y: -16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5, duration: 0.8, ease: 'easeOut' }}
-      >
-        <div className="flex items-center gap-2.5 mb-1.5">
-          <div
-            className="h-7 w-7 rounded-full flex items-center justify-center text-white text-xs font-black"
-            style={{
-              background: CORTEX_BLUE,
-              boxShadow: `0 0 16px rgba(0,112,243,0.45)`,
-            }}
+      {/* ── Scrollable Homepage Wrapping Container ── */}
+      <div className="relative w-full">
+        
+        {/* ── Sticky Hero Wrapper ── */}
+        <div className="sticky top-0 w-full h-screen overflow-hidden pointer-events-none z-[50]">
+          <motion.div 
+            className="w-full h-full relative"
+            style={{ opacity: heroOpacity, scale: heroScale, y: heroY }}
           >
-            C
-          </div>
-          <span
-            className="text-xl font-black tracking-[0.18em] uppercase"
-            style={{
-              color: CORTEX_BLUE,
-              fontFamily: '"Inter Tight", "Montserrat", sans-serif',
-              textShadow: `0 0 12px rgba(0,112,243,0.35)`,
-            }}
-          >
-            CORTEX
-          </span>
+
+
+            <PortalButtons onStaffClick={handleStaffClick} />
+            
+            {/* ── Low-level Vignette Overlay ── */}
+            <div 
+              className="absolute inset-0 pointer-events-none" 
+              style={{ 
+                background: 'radial-gradient(circle at center, transparent 35%, rgba(0, 0, 0, 0.28) 100%)' 
+              }}
+            />
+          </motion.div>
         </div>
-        <p
-          className="text-xs tracking-widest uppercase"
-          style={{ color: '#64748B', letterSpacing: '0.15em' }}
-        >
-          The AI that runs your front line
-        </p>
-      </motion.div>
 
-      {/* ── Bottom-left: Choose Portal pill ── */}
-      <motion.div
-        className="fixed bottom-10 left-8 z-[60] flex flex-col items-start gap-2.5"
-        initial={{ opacity: 0, x: -16 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 1.2, duration: 0.7, ease: 'easeOut' }}
-      >
-        <p
-          className="text-[10px] font-semibold tracking-widest uppercase mb-1"
-          style={{ color: '#94A3B8', letterSpacing: '0.14em' }}
-        >
-          Choose Portal
-        </p>
+        {/* ── Spacer for Scroll Fade ── */}
+        <div style={{ height: '70vh' }} className="pointer-events-none w-full" />
 
-        <a
-          href="https://cortexbackend-fz18wxool-defreitasdmitri6-9057s-projects.vercel.app/chat"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-2 px-4 py-2 rounded-full text-white text-xs font-bold tracking-wide transition-all hover:scale-105 hover:shadow-lg active:scale-95"
-          style={{
-            background: CORTEX_BLUE,
-            boxShadow: `0 4px 20px rgba(0,112,243,0.35)`,
-            fontFamily: '"Inter Tight", sans-serif',
-          }}
-        >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-            <circle cx="12" cy="7" r="4" />
-          </svg>
-          Patient Portal
-        </a>
+        {/* ── Second Fullscreen Card (Scroll Target) ── */}
+        <div className="relative w-full min-h-[90vh] z-[100] flex flex-col items-center pt-24 pb-32 px-4 md:px-12 pointer-events-auto">
+          <motion.div
+            initial={{ opacity: 0, rotateX: 35, y: 120, scale: 0.9 }}
+            whileInView={{ opacity: 1, rotateX: 0, y: 0, scale: 1 }}
+            viewport={{ once: false, amount: 0.1, margin: "0px 0px -100px 0px" }}
+            transition={{ type: "spring", stiffness: 60, damping: 20, duration: 1 }}
+            className="w-full max-w-7xl aspect-[4/3] md:aspect-[16/9] bg-background rounded-[2rem] shadow-[0_40px_100px_rgba(0,0,0,0.6)] flex items-center justify-center p-8 overflow-hidden relative"
+            style={{ transformPerspective: 1600 }}
+          >
+            <DashboardReveal />
+          </motion.div>
+        </div>
 
-        <button
-          onClick={handleStaffClick}
-          className="flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold tracking-wide transition-all hover:scale-105 active:scale-95 cursor-pointer"
-          style={{
-            color: CORTEX_BLUE,
-            border: `1px solid ${CORTEX_BLUE}50`,
-            background: `${CORTEX_BLUE}0D`,
-            backdropFilter: 'blur(8px)',
-            WebkitBackdropFilter: 'blur(8px)',
-            fontFamily: '"Inter Tight", sans-serif',
-          }}
-        >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <rect x="3" y="3" width="7" height="7" />
-            <rect x="14" y="3" width="7" height="7" />
-            <rect x="14" y="14" width="7" height="7" />
-            <rect x="3" y="14" width="7" height="7" />
-          </svg>
-          Staff Dashboard
-        </button>
-      </motion.div>
-      
-      {/* ── Low-level Vignette Overlay ── */}
-      <div 
-        className="fixed inset-0 pointer-events-none z-[40]" 
-        style={{ 
-          background: 'radial-gradient(circle at center, transparent 35%, rgba(0, 0, 0, 0.28) 100%)' 
-        }}
-      />
+        {/* ── Neural Pipeline Section ── */}
+        <NeuralPipeline />
 
+        {/* ── Integrations & ROI ── */}
+        <IntegrationsROI />
 
-      {/* ── Staff Password Modal (rendered via portal into document.body) ── */}
+        {/* ── Final CTA ── */}
+        <FinalCTA />
+
+      </div>
+
+      {/* ── Staff Password Modal ── */}
       {showModal && <StaffModal onClose={() => setShowModal(false)} />}
 
       <LiveCallLog />
