@@ -22,7 +22,7 @@ const STEPS = [
     sub: 'Via AI',
     desc: 'Voice models detect urgency, identify the patient via ANI, and route to the right workflow in real time.',
     icon: Brain,
-    accent: '#6366F1',
+    accent: '#2563EB',
     badge: 'AI',
     metric: '99.2%',
     metricLabel: 'accuracy',
@@ -35,7 +35,7 @@ const STEPS = [
     sub: 'Automatically',
     desc: 'Every conversation writes directly to the patient record — no manual transcription, no lag.',
     icon: ClipboardList,
-    accent: '#0EA5E9',
+    accent: '#3B82F6',
     badge: 'Sync',
     metric: '< 2s',
     metricLabel: 'write',
@@ -47,7 +47,7 @@ const STEPS = [
     sub: 'In Real Time',
     desc: 'Cortex checks availability, confirms the appointment, and sends an instant SMS confirmation.',
     icon: CalendarCheck,
-    accent: '#10B981',
+    accent: '#475569',
     badge: 'Done',
     metric: '41%',
     metricLabel: 'no-shows ↓',
@@ -59,7 +59,7 @@ const STEPS = [
     sub: 'Multi-channel',
     desc: 'SMS, email, and phone reminders cascade automatically — so every patient shows up prepared.',
     icon: MessageSquare,
-    accent: '#8B5CF6',
+    accent: '#1D4ED8',
     badge: 'Auto',
     metric: '3x',
     metricLabel: 'engagement',
@@ -71,7 +71,7 @@ const STEPS = [
     sub: 'Every Call',
     desc: 'End-to-end encryption, consent capture, and audit trails baked in — no bolt-ons needed.',
     icon: ShieldCheck,
-    accent: '#F59E0B',
+    accent: '#64748B',
     badge: 'Secure',
     metric: '100%',
     metricLabel: 'covered',
@@ -90,7 +90,7 @@ export default function NeuralPipeline() {
   const posRef = useRef(0);
   const animRef = useRef(null);
   const lastTimestamp = useRef(null);
-  const SPEED = 0.5; // px per ms
+  const SPEED = 0.08; // px per ms — slow, smooth drift
 
   // Double the steps for seamless loop
   const DOUBLED = [...STEPS, ...STEPS];

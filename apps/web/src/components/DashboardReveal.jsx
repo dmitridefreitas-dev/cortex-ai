@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { motion, useScroll, useTransform, useInView, AnimatePresence } from 'framer-motion';
+import { motion, useInView, AnimatePresence } from 'framer-motion';
 import { Phone, UserCheck, TrendingUp, ShieldCheck, Database, CircleGauge, BellRing, Activity } from 'lucide-react';
 
 const LOG_ENTRIES = [
@@ -43,10 +43,6 @@ export default function DashboardReveal() {
   const inView = useInView(sectionRef, { once: true, margin: '-60px' });
   const [visibleLogs, setVisibleLogs] = useState(LOG_ENTRIES.slice(0, 3));
 
-  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start end', 'end start'] });
-  const cardZ = useTransform(scrollYProgress, [0, 0.5], [0, 10]);
-  const feedZ = useTransform(scrollYProgress, [0, 0.5], [0, -5]);
-
   useEffect(() => {
     if (!inView) return;
     const interval = setInterval(() => {
@@ -58,29 +54,24 @@ export default function DashboardReveal() {
 
   const stats = [
     { label: 'Patients Identified', raw: 4821, icon: UserCheck, accent: '#2563EB', trend: '+12%' },
-    { label: 'Calls Automated', raw: 98.4, suffix: '%', icon: Phone, accent: '#0EA5E9', trend: 'Peak' },
-    { label: 'EMR Entries', raw: 1240, icon: Database, accent: '#6366F1', trend: 'Direct' },
+    { label: 'Calls Automated', raw: 98.4, suffix: '%', icon: Phone, accent: '#3B82F6', trend: 'Peak' },
+    { label: 'EMR Entries', raw: 1240, icon: Database, accent: '#1D4ED8', trend: 'Direct' },
   ];
 
   const operationRows = [
     { label: 'Inbound calls active', value: '18', accent: '#2563EB' },
-    { label: 'AI triage queue', value: '04', accent: '#6366F1' },
-    { label: 'Scheduling confirmations', value: '31', accent: '#10B981' },
-    { label: 'Escalations', value: '02', accent: '#F59E0B' },
+    { label: 'AI triage queue', value: '04', accent: '#1D4ED8' },
+    { label: 'Scheduling confirmations', value: '31', accent: '#475569' },
+    { label: 'Escalations', value: '02', accent: '#64748B' },
   ];
 
   return (
     <div
       ref={sectionRef}
-      className="relative w-full min-h-screen flex flex-col bg-background"
-      style={{ perspective: '1200px' }}
+      className="relative w-full flex flex-col bg-background"
     >
-      {/* Subtle top gradient tie-in from hero */}
-      <div className="absolute top-0 inset-x-0 h-32 pointer-events-none"
-        style={{ background: 'linear-gradient(180deg, hsl(243 100% 96%) 0%, transparent 100%)' }} />
-
       {/* Main content */}
-      <div className="flex-1 flex flex-col px-6 md:px-16 pt-20 pb-16 gap-6" style={{ transformStyle: 'preserve-3d' }}>
+      <div className="flex flex-col px-6 md:px-16 pt-10 pb-16 gap-6">
 
         {/* Section label */}
         <motion.div
@@ -98,13 +89,10 @@ export default function DashboardReveal() {
           </p>
         </motion.div>
 
-        <div className="flex-1 flex flex-col md:flex-row gap-6">
+        <div className="flex flex-col md:flex-row gap-6">
 
           {/* LEFT: KPI stat cards */}
-          <motion.div
-            className="flex flex-row md:flex-col gap-4 md:w-64 shrink-0"
-            style={{ translateZ: cardZ }}
-          >
+          <div className="flex flex-row md:flex-col gap-4 md:w-64 shrink-0">
             {stats.map((stat, i) => (
               <motion.div
                 key={i}
@@ -121,7 +109,7 @@ export default function DashboardReveal() {
                   <div className="p-2 rounded-lg" style={{ background: `${stat.accent}14` }}>
                     <stat.icon size={15} style={{ color: stat.accent }} />
                   </div>
-                  <span className="text-[9px] font-black px-2 py-1 rounded-full text-emerald-600 bg-emerald-50 uppercase tracking-tight border border-emerald-200">
+                  <span className="text-[9px] font-black px-2 py-1 rounded-full text-slate-600 bg-slate-50 uppercase tracking-tight border border-slate-200">
                     {stat.trend}
                   </span>
                 </div>
@@ -144,7 +132,7 @@ export default function DashboardReveal() {
             >
               {[
                 { icon: ShieldCheck, accent: '#2563EB', label: 'Compliance', value: 'HIPAA Level 4' },
-                { icon: TrendingUp, accent: '#10B981', label: 'Efficiency', value: '+42% Slots Automated' },
+                { icon: TrendingUp, accent: '#2563EB', label: 'Efficiency', value: '+42% Slots Automated' },
               ].map((b, i) => (
                 <div key={i} className="bg-white border border-slate-200 rounded-xl p-3 flex flex-col gap-1 shadow-sm">
                   <div className="flex items-center gap-2">
@@ -155,13 +143,10 @@ export default function DashboardReveal() {
                 </div>
               ))}
             </motion.div>
-          </motion.div>
+          </div>
 
           {/* RIGHT: Operations panel + live log */}
-          <motion.div
-            className="flex-1 flex flex-col gap-5 min-h-0"
-            style={{ translateZ: feedZ }}
-          >
+          <div className="flex-1 flex flex-col gap-5 min-h-0">
             {/* Operations matrix */}
             <motion.div
               className="flex-1 bg-white border border-slate-200 rounded-3xl p-6 relative overflow-hidden shadow-sm"
@@ -249,7 +234,7 @@ export default function DashboardReveal() {
             >
               <div className="flex items-center gap-2 mb-3">
                 <motion.div
-                  className="w-1.5 h-1.5 rounded-full bg-emerald-500"
+                  className="w-1.5 h-1.5 rounded-full bg-blue-500"
                   animate={{ opacity: [1, 0.3, 1] }}
                   transition={{ duration: 1.5, repeat: Infinity }}
                 />
@@ -261,7 +246,6 @@ export default function DashboardReveal() {
                   {visibleLogs.map((log) => (
                     <motion.div
                       key={log.time + log.event}
-                      layout
                       initial={{ opacity: 0, y: -8 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, x: 16 }}
@@ -269,14 +253,14 @@ export default function DashboardReveal() {
                       className="flex items-center gap-3 px-2 py-1 rounded-md hover:bg-slate-50 transition-colors"
                     >
                       <span className="text-[9px] font-mono text-slate-400 shrink-0">{log.time}</span>
-                      <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${log.type === 'success' ? 'bg-emerald-400' : log.type === 'info' ? 'bg-blue-400' : 'bg-slate-300'}`} />
+                      <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${log.type === 'success' ? 'bg-blue-400' : log.type === 'info' ? 'bg-blue-300' : 'bg-slate-300'}`} />
                       <span className="text-[10px] text-slate-600 font-medium tracking-tight truncate">{log.event}</span>
                     </motion.div>
                   ))}
                 </AnimatePresence>
               </div>
             </motion.div>
-          </motion.div>
+          </div>
         </div>
       </div>
     </div>
