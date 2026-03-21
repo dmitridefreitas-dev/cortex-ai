@@ -18,53 +18,36 @@ export default function FinalCTA() {
   return (
     <section
       ref={sectionRef}
-      className="relative w-full min-h-[96vh] flex items-center justify-center overflow-hidden"
-      style={{ background: '#040911' }}
+      className="relative w-full min-h-[96vh] flex items-center justify-center overflow-hidden bg-gradient-to-b from-background to-[#E8E7FF]"
     >
-      {/* Radial clip-path reveal — wipes the entire screen */}
+      {/* Radial clip-path reveal */}
       <motion.div
-        className="absolute inset-0"
-        style={{ background: '#040911' }}
+        className="absolute inset-0 bg-gradient-to-b from-background to-[#E8E7FF]"
         animate={inView ? { clipPath: 'circle(150% at 50% 50%)' } : { clipPath: 'circle(0% at 50% 50%)' }}
-        transition={{ duration: 1.2, ease: [0.23, 1, 0.32, 1] }}
+        transition={{ duration: 0.95, ease: [0.23, 1, 0.32, 1] }}
       />
 
-      {/* Deep ambient glows */}
+      {/* Ambient glows — soft blue on light bg */}
       <motion.div className="absolute inset-0 pointer-events-none" style={{ y: backPlaneY }}>
         <motion.div
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] rounded-full"
-          style={{ background: 'radial-gradient(circle, rgba(37,99,235,0.1) 0%, transparent 65%)' }}
+          style={{ background: 'radial-gradient(circle, rgba(37,99,235,0.07) 0%, transparent 65%)' }}
           animate={inView ? { scale: [0.8, 1.05, 0.95, 1], opacity: [0, 1] } : { opacity: 0 }}
-          transition={{ duration: 2, ease: 'easeOut' }}
+          transition={{ duration: 1.5, ease: 'easeOut' }}
         />
         <motion.div
           className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full"
-          style={{ background: 'radial-gradient(circle at top right, rgba(37,99,235,0.08), transparent 60%)' }}
+          style={{ background: 'radial-gradient(circle at top right, rgba(99,102,241,0.06), transparent 60%)' }}
           animate={inView ? { opacity: 1 } : { opacity: 0 }}
-          transition={{ delay: 0.4, duration: 1 }}
+          transition={{ delay: 0.2, duration: 0.7 }}
         />
         <motion.div
           className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full"
-          style={{ background: 'radial-gradient(circle at bottom left, rgba(99,37,235,0.06), transparent 60%)' }}
+          style={{ background: 'radial-gradient(circle at bottom left, rgba(37,99,235,0.05), transparent 60%)' }}
           animate={inView ? { opacity: 1 } : { opacity: 0 }}
-          transition={{ delay: 0.6, duration: 1 }}
+          transition={{ delay: 0.3, duration: 0.7 }}
         />
       </motion.div>
-
-      {/* Subtle grid */}
-      <motion.div className="absolute inset-0 pointer-events-none opacity-20" style={{
-        backgroundImage: 'linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)',
-        backgroundSize: '80px 80px',
-        y: backPlaneY,
-      }} />
-
-      {/* Horizontal scan line */}
-      <motion.div
-        className="absolute left-0 right-0 h-px pointer-events-none"
-        style={{ background: 'linear-gradient(90deg, transparent, rgba(37,99,235,0.4), transparent)', top: '50%' }}
-        animate={inView ? { scaleX: [0, 1], opacity: [0, 0.6, 0] } : { scaleX: 0 }}
-        transition={{ delay: 0.3, duration: 1.5, ease: 'easeInOut' }}
-      />
 
       {/* Content */}
       <motion.div className="relative z-10 flex flex-col items-center text-center px-6 py-16 max-w-4xl mx-auto" style={{ y: frontPlaneY }}>
@@ -74,34 +57,26 @@ export default function FinalCTA() {
           className="mb-12 relative"
           initial={{ scale: 0.5, opacity: 0 }}
           animate={inView ? { scale: 1, opacity: 1 } : {}}
-          transition={{ delay: 0.45, duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
+          transition={{ delay: 0.25, duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
         >
           {/* Expanding rings */}
           {[1, 1.6, 2.2].map((scale, i) => (
             <motion.div
               key={i}
-              className="absolute inset-0 rounded-[2rem] border border-blue-500/20"
-              animate={inView ? {
-                scale: [1, scale],
-                opacity: [0.4, 0],
-              } : {}}
-              transition={{
-                duration: 2.5,
-                repeat: Infinity,
-                ease: 'easeOut',
-                delay: 1.2 + i * 0.4,
-              }}
+              className="absolute inset-0 rounded-[2rem] border border-blue-400/25"
+              animate={inView ? { scale: [1, scale], opacity: [0.4, 0] } : {}}
+              transition={{ duration: 2.5, repeat: Infinity, ease: 'easeOut', delay: 0.8 + i * 0.25 }}
             />
           ))}
 
           <motion.div
             className="w-20 h-20 rounded-[2rem] flex items-center justify-center relative"
-            style={{ background: 'rgba(37,99,235,0.12)', border: '1px solid rgba(37,99,235,0.25)' }}
+            style={{ background: 'rgba(37,99,235,0.08)', border: '1px solid rgba(37,99,235,0.2)' }}
             animate={inView ? {
               boxShadow: [
-                '0 0 20px rgba(37,99,235,0.2)',
-                '0 0 60px rgba(37,99,235,0.5)',
-                '0 0 20px rgba(37,99,235,0.2)',
+                '0 0 20px rgba(37,99,235,0.1)',
+                '0 0 50px rgba(37,99,235,0.3)',
+                '0 0 20px rgba(37,99,235,0.1)',
               ],
             } : {}}
             transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
@@ -119,10 +94,10 @@ export default function FinalCTA() {
 
           {/* Unlocked badge */}
           <motion.div
-            className="absolute -bottom-2 -right-2 w-7 h-7 bg-green-500 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(16,185,129,0.5)]"
+            className="absolute -bottom-2 -right-2 w-7 h-7 bg-emerald-500 rounded-full flex items-center justify-center shadow-[0_4px_20px_rgba(16,185,129,0.4)]"
             initial={{ scale: 0 }}
             animate={inView ? { scale: 1 } : {}}
-            transition={{ delay: 1.3, duration: 0.4, type: 'spring', stiffness: 250 }}
+            transition={{ delay: 0.95, duration: 0.35, type: 'spring', stiffness: 250 }}
           >
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
               <polyline points="20 6 9 17 4 12" />
@@ -134,18 +109,18 @@ export default function FinalCTA() {
         <motion.div
           initial={{ opacity: 0, y: 28 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.55, duration: 0.8, ease: [0.23, 1, 0.32, 1] }}
+          transition={{ delay: 0.35, duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
         >
-          <p className="text-[10px] font-black uppercase tracking-[0.5em] text-blue-500 mb-6">
+          <p className="text-[10px] font-black uppercase tracking-[0.5em] text-blue-600 mb-6">
             System Activation
           </p>
-          <h2 className="text-5xl md:text-7xl font-black text-white mb-6 tracking-tighter leading-[1.0]">
+          <h2 className="text-5xl md:text-7xl font-black text-slate-900 mb-6 tracking-tighter leading-[1.0]">
             Ready to automate<br />
             your{' '}
             <span
               className="text-transparent"
               style={{
-                backgroundImage: 'linear-gradient(135deg, #60A5FA 0%, #2563EB 50%, #7C3AED 100%)',
+                backgroundImage: 'linear-gradient(135deg, #3B82F6 0%, #2563EB 50%, #6366F1 100%)',
                 WebkitBackgroundClip: 'text',
                 backgroundClip: 'text',
               }}
@@ -153,7 +128,7 @@ export default function FinalCTA() {
               front line?
             </span>
           </h2>
-          <p className="text-slate-400 text-base md:text-lg max-w-2xl mx-auto font-medium leading-relaxed mb-12">
+          <p className="text-slate-500 text-base md:text-lg max-w-2xl mx-auto font-medium leading-relaxed mb-12">
             Join 450+ medical practices already using Cortex to recover their staff's time and eliminate no-shows — deployed in 48 hours, zero disruption.
           </p>
         </motion.div>
@@ -163,16 +138,16 @@ export default function FinalCTA() {
           className="flex flex-col sm:flex-row gap-4"
           initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.75, duration: 0.7 }}
+          transition={{ delay: 0.5, duration: 0.55 }}
         >
           <motion.a
             href="/login"
-            whileHover={{ scale: 1.04, boxShadow: '0 20px 60px rgba(37,99,235,0.6)' }}
+            whileHover={{ scale: 1.04, boxShadow: '0 20px 50px rgba(37,99,235,0.35)' }}
             whileTap={{ scale: 0.96 }}
             className="inline-flex items-center justify-center gap-3 px-10 py-5 text-white font-black text-sm uppercase tracking-widest rounded-2xl transition-all whitespace-nowrap"
             style={{
               background: 'linear-gradient(135deg, #2563EB, #1D4ED8)',
-              boxShadow: '0 10px 40px rgba(37,99,235,0.4)',
+              boxShadow: '0 8px 30px rgba(37,99,235,0.3)',
             }}
           >
             Deploy Cortex AI
@@ -181,15 +156,11 @@ export default function FinalCTA() {
 
           <motion.a
             href="/ai-playground"
-            whileHover={{
-              scale: 1.04,
-              backgroundColor: 'rgba(255,255,255,0.06)',
-              borderColor: 'rgba(255,255,255,0.2)',
-            }}
+            whileHover={{ scale: 1.04, borderColor: 'rgba(37,99,235,0.3)', backgroundColor: 'rgba(37,99,235,0.04)' }}
             whileTap={{ scale: 0.96 }}
-            className="inline-flex items-center justify-center gap-3 px-10 py-5 bg-transparent border border-white/[0.08] text-white font-black text-sm uppercase tracking-widest rounded-2xl transition-all whitespace-nowrap"
+            className="inline-flex items-center justify-center gap-3 px-10 py-5 bg-white border border-slate-200 text-slate-700 font-black text-sm uppercase tracking-widest rounded-2xl transition-all whitespace-nowrap shadow-sm"
           >
-            <Sparkles size={16} className="text-blue-400" />
+            <Sparkles size={16} className="text-blue-500" />
             Try AI Sandbox
           </motion.a>
         </motion.div>
@@ -203,15 +174,15 @@ export default function FinalCTA() {
                 key={badge.label}
                 className="flex items-center gap-2"
                 initial={{ opacity: 0, y: 8 }}
-                animate={inView ? { opacity: 0.45 } : { opacity: 0 }}
-                transition={{ delay: 1.1 + i * 0.15, duration: 0.6 }}
+                animate={inView ? { opacity: 1 } : { opacity: 0 }}
+                transition={{ delay: 0.7 + i * 0.1, duration: 0.45 }}
               >
-                <Icon size={12} className="text-slate-500" />
-                <span className="text-[10px] font-black uppercase tracking-[0.25em] text-slate-500">
+                <Icon size={12} className="text-slate-400" />
+                <span className="text-[10px] font-black uppercase tracking-[0.25em] text-slate-400">
                   {badge.label}
                 </span>
                 {i < TRUST_BADGES.length - 1 && (
-                  <span className="ml-6 text-slate-800 text-xs">|</span>
+                  <span className="ml-6 text-slate-300 text-xs">|</span>
                 )}
               </motion.div>
             );

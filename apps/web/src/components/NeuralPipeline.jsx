@@ -1,295 +1,260 @@
-import React, { useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { Phone, BrainCircuit, CalendarCheck, FileText } from 'lucide-react';
+import React, { useRef, useEffect, useState } from 'react';
+import { motion, useAnimationControls, useInView } from 'framer-motion';
+import { Brain, Mic, ClipboardList, CalendarCheck, MessageSquare, ShieldCheck } from 'lucide-react';
 
 const STEPS = [
   {
-    id: 'call',
-    icon: Phone,
-    label: 'Step 01',
-    title: 'Call Received',
-    color: '#3B82F6',
-    colorSoft: 'rgba(148,163,184,0.10)',
-    tags: ['ANI Match', 'Voice ID'],
-    content: (
-      <div className="mt-5 bg-black/20 rounded-2xl border border-white/5 p-4 font-mono text-[11px] leading-relaxed text-slate-300 space-y-1.5">
-        <p><span className="text-blue-400">[AI]</span> Thank you for calling Westside Medical. I'm Cortex.</p>
-        <p><span className="text-slate-500">[AI]</span> I see you're calling from a number registered to Maria R. — is that correct?</p>
-        <p><span className="text-green-400">[Patient]</span> Yes, that's me.</p>
-        <p><span className="text-blue-400">[AI]</span> Great, Maria. How can I help you today?</p>
-      </div>
-    ),
+    id: 'intake',
+    label: '01 — Intake',
+    title: 'Call Answered',
+    sub: 'Instantly',
+    desc: 'Cortex picks up within one ring, 24/7. Callers hear a natural voice — no hold music, no menus.',
+    icon: Mic,
+    accent: '#2563EB',
+    badge: 'Live',
+    metric: '< 1s',
+    metricLabel: 'pickup',
   },
   {
     id: 'triage',
-    icon: BrainCircuit,
-    label: 'Step 02',
-    title: 'AI Triage',
-    color: '#64748B',
-    colorSoft: 'rgba(148,163,184,0.16)',
-    tags: ['LLM-v4', 'Real-time'],
-    content: (
-      <div className="mt-5 space-y-3">
-        <div className="flex items-center justify-between">
-          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Intent</span>
-          <div className="flex gap-2">
-            {['APPOINTMENT', 'URGENT'].map((b, i) => (
-              <span key={b} className={`text-[8px] font-black px-2 py-1 rounded-md uppercase tracking-wider ${i === 0 ? 'bg-slate-600/40 text-slate-200' : 'bg-red-600/30 text-red-300'}`}>{b}</span>
-            ))}
-          </div>
-        </div>
-        <div className="rounded-xl border border-white/8 bg-black/20 px-3 py-2">
-          <div className="text-[9px] text-slate-500 uppercase tracking-wider mb-1">Neural pulse</div>
-          <svg viewBox="0 0 240 44" className="w-full h-6">
-            <motion.path
-              d="M0,24 L14,24 L22,14 L32,32 L42,24 L65,24 L73,12 L82,34 L94,24 L120,24 L132,18 L140,30 L152,24 L188,24 L198,14 L208,34 L220,24 L240,24"
-              fill="none"
-              stroke="#60A5FA"
-              strokeWidth="2"
-              strokeLinecap="round"
-              initial={{ pathLength: 0.1, opacity: 0.5 }}
-              whileInView={{ pathLength: [0.1, 1], opacity: [0.5, 1, 0.6] }}
-              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-              viewport={{ once: true }}
-            />
-          </svg>
-        </div>
-        <div>
-          <div className="flex justify-between mb-1">
-            <span className="text-[10px] text-slate-500">Sentiment</span>
-            <span className="text-[10px] font-bold text-slate-300">Positive (0.84)</span>
-          </div>
-          <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
-            <motion.div
-              className="h-full bg-gradient-to-r from-green-500 to-emerald-400 rounded-full"
-              initial={{ width: 0 }}
-              whileInView={{ width: '84%' }}
-              transition={{ delay: 0.5, duration: 1.2, ease: 'easeOut' }}
-              viewport={{ once: true }}
-            />
-          </div>
-        </div>
-        <div>
-          <div className="flex justify-between mb-1">
-            <span className="text-[10px] text-slate-500">Urgency</span>
-            <span className="text-[10px] font-bold text-slate-300">Low (0.21)</span>
-          </div>
-          <div className="h-1.5 bg-white/5 rounded-full overflow-hidden">
-            <motion.div
-              className="h-full bg-gradient-to-r from-yellow-500 to-amber-400 rounded-full"
-              initial={{ width: 0 }}
-              whileInView={{ width: '21%' }}
-              transition={{ delay: 0.7, duration: 1.2, ease: 'easeOut' }}
-              viewport={{ once: true }}
-            />
-          </div>
-        </div>
-      </div>
-    ),
+    label: '02 — Triage',
+    title: 'Intent Classified',
+    sub: 'Via AI',
+    desc: 'Voice models detect urgency, identify the patient via ANI, and route to the right workflow in real time.',
+    icon: Brain,
+    accent: '#6366F1',
+    badge: 'AI',
+    metric: '99.2%',
+    metricLabel: 'accuracy',
+    pulse: true,
+  },
+  {
+    id: 'emr',
+    label: '03 — EMR Sync',
+    title: 'Record Updated',
+    sub: 'Automatically',
+    desc: 'Every conversation writes directly to the patient record — no manual transcription, no lag.',
+    icon: ClipboardList,
+    accent: '#0EA5E9',
+    badge: 'Sync',
+    metric: '< 2s',
+    metricLabel: 'write',
   },
   {
     id: 'schedule',
+    label: '04 — Scheduling',
+    title: 'Slot Confirmed',
+    sub: 'In Real Time',
+    desc: 'Cortex checks availability, confirms the appointment, and sends an instant SMS confirmation.',
     icon: CalendarCheck,
-    label: 'Step 03',
-    title: 'Auto-Schedule',
-    color: '#10B981',
-    colorSoft: 'rgba(148,163,184,0.10)',
-    tags: ['Real-Time', 'EHR Sync'],
-    content: (
-      <div className="mt-5">
-        <div className="grid grid-cols-4 gap-1 text-center">
-          {['Mon', 'Tue', 'Wed', 'Thu'].map((d) => (
-            <div key={d} className="text-[9px] font-bold text-slate-500 uppercase mb-1">{d}</div>
-          ))}
-          {[null, '9:00', '10:30', null, '11:00', null, '2:00', null, null, '3:30', null, '4:30'].map((slot, i) => (
-            <motion.div
-              key={i}
-              className={`rounded-md py-1.5 text-[9px] font-bold ${slot === '10:30' ? 'bg-green-500 text-white shadow-[0_0_12px_rgba(5,150,105,0.5)]' : slot ? 'bg-white/5 text-slate-400 hover:bg-white/10 cursor-pointer' : 'bg-transparent'}`}
-              animate={slot === '10:30' ? { scale: [1, 1.06, 1] } : {}}
-              transition={{ duration: 2, repeat: Infinity }}
-            >
-              {slot || ''}
-            </motion.div>
-          ))}
-        </div>
-        <p className="text-[10px] text-green-400 font-bold mt-3">✓ Confirmed — Tue, 10:30 AM with Dr. Chen</p>
-      </div>
-    ),
+    accent: '#10B981',
+    badge: 'Done',
+    metric: '41%',
+    metricLabel: 'no-shows ↓',
   },
   {
-    id: 'notify',
-    icon: FileText,
-    label: 'Step 04',
-    title: 'EMR Sync',
-    color: '#475569',
-    colorSoft: 'rgba(148,163,184,0.14)',
-    tags: ['HL7/FHIR', 'No Manual Entry'],
-    content: (
-      <div className="mt-5 bg-black/20 border border-white/5 rounded-2xl p-4 space-y-2 font-mono text-[10px]">
-        <div className="flex justify-between text-slate-400">
-          <span className="text-slate-500">Patient</span>
-          <span>Maria Rodriguez — #9281</span>
-        </div>
-        <div className="flex justify-between text-slate-400">
-          <span className="text-slate-500">Appt.</span>
-          <span>Tue Mar 25, 10:30 AM</span>
-        </div>
-        <div className="flex justify-between text-slate-400">
-          <span className="text-slate-500">Provider</span>
-          <span>Dr. Chen — Cardiology</span>
-        </div>
-        <div className="flex justify-between text-slate-400">
-          <span className="text-slate-500">Intent</span>
-          <span className="text-blue-400">APPOINTMENT (0.97)</span>
-        </div>
-        <div className="mt-2 flex items-center gap-2 text-green-400">
-          <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-          Synced to Athena — 0.3s
-        </div>
-      </div>
-    ),
+    id: 'followup',
+    label: '05 — Follow-Up',
+    title: 'Reminders Sent',
+    sub: 'Multi-channel',
+    desc: 'SMS, email, and phone reminders cascade automatically — so every patient shows up prepared.',
+    icon: MessageSquare,
+    accent: '#8B5CF6',
+    badge: 'Auto',
+    metric: '3x',
+    metricLabel: 'engagement',
+  },
+  {
+    id: 'compliance',
+    label: '06 — Compliance',
+    title: 'HIPAA Verified',
+    sub: 'Every Call',
+    desc: 'End-to-end encryption, consent capture, and audit trails baked in — no bolt-ons needed.',
+    icon: ShieldCheck,
+    accent: '#F59E0B',
+    badge: 'Secure',
+    metric: '100%',
+    metricLabel: 'covered',
   },
 ];
 
+const CARD_WIDTH = 340;
+const CARD_GAP = 24;
+const CARD_STRIDE = CARD_WIDTH + CARD_GAP;
+
 export default function NeuralPipeline() {
   const sectionRef = useRef(null);
-  const trackRef = useRef(null);
+  const inView = useInView(sectionRef, { once: true, margin: '-80px' });
+  const controls = useAnimationControls();
+  const [paused, setPaused] = useState(false);
+  const posRef = useRef(0);
+  const animRef = useRef(null);
+  const lastTimestamp = useRef(null);
+  const SPEED = 0.5; // px per ms
 
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ['start start', 'end end'],
-  });
+  // Double the steps for seamless loop
+  const DOUBLED = [...STEPS, ...STEPS];
+  const TOTAL_WIDTH = STEPS.length * CARD_STRIDE;
 
-  // Map vertical scroll to horizontal translate
-  const x = useTransform(scrollYProgress, [0, 1], ['0%', '-74%']);
-  // Connecting SVG line draw
-  const pathLength = useTransform(scrollYProgress, [0, 1], [0, 1]);
+  useEffect(() => {
+    if (!inView) return;
+
+    const tick = (timestamp) => {
+      if (paused) {
+        lastTimestamp.current = null;
+        animRef.current = requestAnimationFrame(tick);
+        return;
+      }
+      if (lastTimestamp.current !== null) {
+        const delta = timestamp - lastTimestamp.current;
+        posRef.current = (posRef.current + SPEED * delta) % TOTAL_WIDTH;
+        controls.set({ x: -posRef.current });
+      }
+      lastTimestamp.current = timestamp;
+      animRef.current = requestAnimationFrame(tick);
+    };
+
+    animRef.current = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(animRef.current);
+  }, [inView, paused, controls, TOTAL_WIDTH]);
 
   return (
-    <section ref={sectionRef} className="relative" style={{ height: '220vh', background: '#050A14' }}>
-      {/* Sticky wrapper */}
-      <div className="sticky top-0 h-screen overflow-hidden flex flex-col justify-center" style={{ background: '#050A14' }}>
-
-        {/* Section header */}
-        <div className="text-center pt-4 pb-2 px-6 shrink-0">
-          <motion.p
-            className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-300 mb-2"
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            The Journey
-          </motion.p>
-          <motion.h2
-            className="text-3xl md:text-4xl font-black text-white tracking-tighter"
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-          >
-            One patient. Four moments.
-          </motion.h2>
-          <motion.p
-            className="text-sm text-slate-400 mt-1 max-w-xl mx-auto font-medium"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-          >
-            Scroll to follow a single call through the Cortex AI pipeline.
-          </motion.p>
-        </div>
-
-        {/* Horizontal scroll track */}
-        <div className="relative flex-1 overflow-hidden px-[7vw]">
-          {/* Connecting SVG line */}
-          <div className="absolute top-1/2 left-0 w-full h-px pointer-events-none" style={{ transform: 'translateY(-50%)' }}>
-            <svg className="w-full h-16" style={{ overflow: 'visible', marginTop: '-32px' }} preserveAspectRatio="none">
-              <motion.path
-                d="M0,32 Q25%,16 50%,32 Q75%,48 100%,32"
-                fill="none"
-                stroke="rgba(148,163,184,0.35)"
-                strokeWidth="1.5"
-                strokeDasharray="6 4"
-                style={{ pathLength }}
-              />
-            </svg>
-          </div>
-
-          <motion.div
-            ref={trackRef}
-            className="flex items-center gap-5 h-full"
-            style={{ x, width: `${STEPS.length * 90}vw` }}
-          >
-            {STEPS.map((step, i) => {
-              const Icon = step.icon;
-              return (
-                <motion.div
-                  key={step.id}
-                  className="shrink-0 w-[74vw] md:w-[410px] h-auto bg-[#0B1220]/95 border border-white/10 rounded-[2rem] p-7 relative overflow-hidden focus-card-scanlines"
-                  initial={{ opacity: 0, scale: 0.96 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true, margin: '-50px' }}
-                  transition={{ delay: i * 0.1, duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
-                  style={{
-                    boxShadow: `0 0 40px ${step.colorSoft}, 0 0 0 1px rgba(255,255,255,0.04)`,
-                  }}
-                >
-                  {/* Glow blob */}
-                  <div
-                    className="absolute -top-20 -right-20 w-56 h-56 rounded-full blur-[80px] pointer-events-none"
-                    style={{ background: step.colorSoft }}
-                  />
-
-                  <div className="relative z-10">
-                    {/* Step label */}
-                    <div className="flex items-center justify-between mb-4">
-                      <span className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-500">{step.label}</span>
-                      <div className="flex gap-1.5">
-                        {step.tags.map(t => (
-                          <span key={t} className="text-[8px] font-black px-2 py-1 rounded-md uppercase tracking-wider bg-white/5 text-slate-400">
-                            {t}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Icon + title */}
-                    <div className="flex items-center gap-3 mb-2">
-                      <div
-                        className="p-2.5 rounded-xl border"
-                        style={{ background: step.colorSoft, borderColor: `${step.color}30` }}
-                      >
-                        <Icon size={20} style={{ color: step.color }} />
-                      </div>
-                      <h3 className="text-xl font-black text-white tracking-tight">{step.title}</h3>
-                    </div>
-
-                    {/* Dynamic content */}
-                    {step.content}
-                  </div>
-                </motion.div>
-              );
-            })}
-          </motion.div>
-        </div>
-
-        {/* Scroll progress indicators */}
-        <div className="flex justify-center gap-2 pb-5 shrink-0">
-          {STEPS.map((s, i) => (
-            <div key={s.id} className="w-6 h-1 rounded-full bg-white/10 overflow-hidden">
-              <motion.div
-                className="h-full rounded-full"
-                style={{
-                  background: s.color,
-                  scaleX: useTransform(scrollYProgress, [i / STEPS.length, (i + 1) / STEPS.length], [0, 1]),
-                  transformOrigin: 'left',
-                }}
-              />
-            </div>
-          ))}
-        </div>
+    <section ref={sectionRef} className="relative w-full bg-background overflow-hidden py-16">
+      {/* Section header */}
+      <div className="px-6 md:px-16 mb-10 text-center">
+        <motion.p
+          className="text-[10px] font-black uppercase tracking-[0.4em] text-blue-600 mb-2"
+          initial={{ opacity: 0 }}
+          animate={inView ? { opacity: 1 } : {}}
+          transition={{ duration: 0.4 }}
+        >
+          The Journey
+        </motion.p>
+        <motion.h2
+          className="text-3xl md:text-4xl font-black text-slate-900 tracking-tight"
+          initial={{ opacity: 0, y: 12 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ delay: 0.1, duration: 0.45 }}
+        >
+          One patient. Four moments.
+        </motion.h2>
+        <motion.p
+          className="text-slate-500 text-sm mt-2 max-w-md mx-auto"
+          initial={{ opacity: 0 }}
+          animate={inView ? { opacity: 1 } : {}}
+          transition={{ delay: 0.2, duration: 0.4 }}
+        >
+          Every touchpoint, handled — from first ring to follow-up.
+        </motion.p>
       </div>
+
+      {/* Connecting dashed line overlay */}
+      <div className="absolute left-0 right-0 pointer-events-none"
+        style={{ top: 'calc(16px + 10rem + 36px)' }}>
+        <div className="border-t border-dashed border-slate-200 mx-6 md:mx-16" />
+      </div>
+
+      {/* Carousel track */}
+      <div
+        className="relative"
+        style={{ height: '340px' }}
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
+      >
+        <motion.div
+          className="absolute top-0 left-0 flex"
+          style={{ gap: `${CARD_GAP}px`, paddingLeft: '6vw', paddingRight: '6vw', willChange: 'transform' }}
+          animate={controls}
+        >
+          {DOUBLED.map((step, i) => {
+            const Icon = step.icon;
+            return (
+              <div
+                key={`${step.id}-${i}`}
+                className="shrink-0 bg-white border border-slate-200 rounded-3xl p-6 flex flex-col justify-between shadow-sm hover:shadow-lg transition-all duration-300 group cursor-default"
+                style={{ width: `${CARD_WIDTH}px`, height: '300px' }}
+              >
+                {/* Header */}
+                <div className="flex items-start justify-between mb-3">
+                  <div className="flex items-center gap-3">
+                    <div
+                      className="p-2.5 rounded-xl"
+                      style={{ background: `${step.accent}14` }}
+                    >
+                      <Icon size={18} style={{ color: step.accent }} />
+                    </div>
+                    <div>
+                      <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{step.label}</p>
+                      <h3 className="text-base font-black text-slate-900 leading-tight">{step.title}</h3>
+                      <p className="text-[10px] text-slate-400">{step.sub}</p>
+                    </div>
+                  </div>
+                  <span
+                    className="text-[8px] font-black uppercase tracking-wider px-2 py-1 rounded-full shrink-0"
+                    style={{
+                      color: step.accent,
+                      background: `${step.accent}14`,
+                      border: `1px solid ${step.accent}30`,
+                    }}
+                  >
+                    {step.badge}
+                  </span>
+                </div>
+
+                {/* Pulse SVG for AI card */}
+                {step.pulse && (
+                  <svg viewBox="0 0 220 32" className="w-full h-5 mb-2">
+                    <motion.path
+                      d="M0,16 L30,16 L42,6 L54,26 L66,16 L100,16 L116,4 L128,28 L140,16 L180,16 L194,8 L206,24 L218,16"
+                      fill="none"
+                      stroke={step.accent}
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      initial={{ pathLength: 0 }}
+                      animate={{ pathLength: [0, 1] }}
+                      transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
+                    />
+                  </svg>
+                )}
+
+                {/* Description */}
+                <p className="text-[11px] text-slate-500 leading-relaxed flex-1 mt-1">{step.desc}</p>
+
+                {/* Metric */}
+                <div
+                  className="mt-3 pt-3 border-t border-slate-100 flex items-end justify-between"
+                >
+                  <div>
+                    <p className="text-[9px] text-slate-400 uppercase tracking-widest">{step.metricLabel}</p>
+                    <p className="text-2xl font-black leading-none" style={{ color: step.accent }}>{step.metric}</p>
+                  </div>
+                  {/* Progress bar */}
+                  <div className="w-20 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                    <motion.div
+                      className="h-full rounded-full"
+                      style={{ background: step.accent }}
+                      initial={{ scaleX: 0 }}
+                      animate={inView ? { scaleX: 1 } : {}}
+                      transition={{ delay: 0.35 + (i % STEPS.length) * 0.06, duration: 0.6, ease: 'easeOut' }}
+                      style={{ originX: 0, background: step.accent }}
+                    />
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </motion.div>
+      </div>
+
+      {/* Hover hint */}
+      <motion.div
+        className="text-center mt-4"
+        initial={{ opacity: 0 }}
+        animate={inView ? { opacity: 1 } : {}}
+        transition={{ delay: 0.5 }}
+      >
+        <p className="text-[9px] uppercase tracking-[0.3em] text-slate-400">Hover to pause</p>
+      </motion.div>
     </section>
   );
 }

@@ -52,17 +52,17 @@ export default function IntegrationsROI() {
   const orbitRotateSpring = useSpring(orbitRotate, { stiffness: 60, damping: 20 });
 
   return (
-    <section ref={sectionRef} className="w-full bg-[#0A0F19] py-24 border-y border-white/5 relative overflow-hidden">
-      {/* Ambient glow */}
+    <section ref={sectionRef} className="w-full bg-background py-24 border-y border-border relative overflow-hidden">
+      {/* Subtle ambient glow */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-slate-400/10 blur-[120px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-blue-100/40 blur-[140px]" />
       </div>
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         {/* Header */}
         <div className="text-center mb-20">
           <motion.p
-            className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-300 mb-4"
+            className="text-[10px] font-black uppercase tracking-[0.4em] text-blue-600 mb-4"
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -70,7 +70,7 @@ export default function IntegrationsROI() {
             The Proof
           </motion.p>
           <motion.h2
-            className="text-3xl md:text-5xl font-black text-white tracking-tighter mb-4"
+            className="text-3xl md:text-5xl font-black text-slate-900 tracking-tighter mb-4"
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -96,21 +96,21 @@ export default function IntegrationsROI() {
           <div className="flex items-center justify-center">
             <div className="relative w-[340px] h-[340px]">
               {/* Orbit rings */}
-              <div className="absolute inset-0 rounded-full border border-white/5" />
-              <div className="absolute inset-6 rounded-full border border-dashed border-white/5 animate-[spin_40s_linear_infinite]" />
+              <div className="absolute inset-0 rounded-full border border-slate-200" />
+              <div className="absolute inset-6 rounded-full border border-dashed border-slate-200 animate-[spin_40s_linear_infinite]" />
 
               {/* Center badge */}
               <div className="absolute inset-0 flex items-center justify-center">
                 <motion.div
-                  className="flex flex-col items-center gap-2 bg-[#0B1220] border border-white/10 rounded-2xl px-6 py-4 shadow-2xl"
+                  className="flex flex-col items-center gap-2 bg-white border border-slate-200 rounded-2xl px-6 py-4 shadow-lg"
                   animate={{
-                    boxShadow: ['0 0 20px rgba(37,99,235,0.15)', '0 0 40px rgba(37,99,235,0.3)', '0 0 20px rgba(37,99,235,0.15)'],
+                    boxShadow: ['0 4px 20px rgba(37,99,235,0.08)', '0 8px 40px rgba(37,99,235,0.18)', '0 4px 20px rgba(37,99,235,0.08)'],
                   }}
                   transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
                 >
-                  <CheckCircle size={22} className="text-green-400" />
-                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-300">Connected</span>
-                  <span className="text-[9px] text-slate-600">{EMR_LOGOS.length} EMR systems</span>
+                  <CheckCircle size={22} className="text-emerald-500" />
+                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-700">Connected</span>
+                  <span className="text-[9px] text-slate-400">{EMR_LOGOS.length} EMR systems</span>
                 </motion.div>
               </div>
 
@@ -135,7 +135,7 @@ export default function IntegrationsROI() {
                         height: 28,
                       }}
                     >
-                      <div className="bg-[#0F1929] border border-white/8 rounded-lg px-2 py-1 text-[8px] font-black uppercase tracking-wider text-slate-400 whitespace-nowrap shadow-lg hover:border-slate-300/40 hover:text-slate-200 transition-colors cursor-default">
+                      <div className="bg-white border border-slate-200 rounded-lg px-2 py-1 text-[8px] font-black uppercase tracking-wider text-slate-500 whitespace-nowrap shadow-sm hover:border-blue-300 hover:text-blue-600 transition-colors cursor-default">
                         {name}
                       </div>
                     </motion.div>
@@ -152,34 +152,31 @@ export default function IntegrationsROI() {
               return (
                 <motion.div
                   key={i}
-                  className="bg-[#0B1220] border border-white/5 rounded-[1.75rem] p-6 flex flex-col gap-3 relative overflow-hidden group"
+                  className="bg-white border border-slate-200 rounded-[1.75rem] p-6 flex flex-col gap-3 relative overflow-hidden group shadow-sm hover:shadow-md transition-shadow"
                   style={{ y: cardMotions[i] }}
                   whileHover={{
-                    borderColor: `${stat.color}40`,
-                    boxShadow: `0 0 30px ${stat.color}20`,
+                    borderColor: `${stat.color}50`,
                     transition: { duration: 0.3 },
                   }}
                 >
                   {/* Micro-glow */}
                   <motion.div
                     className="absolute -top-10 -right-10 w-28 h-28 rounded-full blur-[50px] pointer-events-none"
-                    style={{ background: `${stat.color}18` }}
-                    animate={{
-                      opacity: [0.5, 1, 0.5],
-                    }}
+                    style={{ background: `${stat.color}10` }}
+                    animate={{ opacity: [0.5, 1, 0.5] }}
                     transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut', delay: i * 0.8 }}
                   />
 
                   <div className="relative z-10">
                     <div
                       className="w-9 h-9 rounded-xl flex items-center justify-center mb-3 border"
-                      style={{ background: `${stat.color}15`, borderColor: `${stat.color}25` }}
+                      style={{ background: `${stat.color}12`, borderColor: `${stat.color}25` }}
                     >
                       <Icon size={16} style={{ color: stat.color }} />
                     </div>
 
                     <div className="flex items-baseline gap-1 mb-1">
-                      <span className="text-3xl font-black text-white tabular-nums tracking-tighter">
+                      <span className="text-3xl font-black text-slate-900 tabular-nums tracking-tighter">
                         <SpringCounter
                           target={stat.value}
                           suffix={stat.suffix}
@@ -191,7 +188,7 @@ export default function IntegrationsROI() {
                       )}
                     </div>
 
-                    <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest leading-snug">
+                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-snug">
                       {stat.label}
                     </p>
                   </div>
@@ -203,7 +200,7 @@ export default function IntegrationsROI() {
 
         {/* EMR scrolling marquee — secondary, below grid */}
         <div className="mt-24">
-          <p className="text-center text-[9px] font-black uppercase tracking-[0.35em] text-slate-600 mb-8">
+          <p className="text-center text-[9px] font-black uppercase tracking-[0.35em] text-slate-400 mb-8">
             Integrated with the systems you trust
           </p>
           <div className="relative overflow-hidden [mask-image:linear-gradient(to_right,transparent,white_15%,white_85%,transparent)]">
@@ -214,8 +211,8 @@ export default function IntegrationsROI() {
             >
               {[...EMR_LOGOS, ...EMR_LOGOS].map((emr, i) => (
                 <div key={i} className="flex items-center gap-2 group cursor-default">
-                  <div className="h-1.5 w-1.5 rounded-full bg-slate-400/30 group-hover:bg-blue-400 transition-colors" />
-                  <span className="text-lg font-black text-slate-700 group-hover:text-slate-300 transition-colors tracking-tighter uppercase italic select-none">
+                  <div className="h-1.5 w-1.5 rounded-full bg-blue-300/50 group-hover:bg-blue-500 transition-colors" />
+                  <span className="text-lg font-black text-slate-600 group-hover:text-slate-900 transition-colors tracking-tighter uppercase italic select-none">
                     {emr}
                   </span>
                 </div>

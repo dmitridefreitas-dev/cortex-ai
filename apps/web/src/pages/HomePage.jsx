@@ -236,17 +236,8 @@ const HomePage = () => {
           </motion.div>
         </div>
 
-        {/* ── Spacer for Scroll Fade ── */}
-        <div style={{ height: '12vh' }} className="pointer-events-none w-full" />
-
         {/* ── Continuous Below-The-Legs Narrative Canvas ── */}
-        <div
-          className="relative w-full z-[100] pointer-events-auto"
-          style={{
-            background:
-              'linear-gradient(180deg, #070D18 0%, #050A14 34%, #070D18 72%, #040911 100%)',
-          }}
-        >
+        <div className="relative w-full z-[100] pointer-events-auto bg-background">
           <DashboardReveal />
           <NeuralPipeline />
           <IntegrationsROI />
