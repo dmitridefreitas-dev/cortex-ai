@@ -85,29 +85,29 @@ const LiveCallLog = () => {
         animate={{ opacity: 1 }}
       >
         <span className="text-[10px] font-black uppercase tracking-[0.2em] text-blue-500">
-          Neural Feed Live
+          Neural Feed <span className="inline-block">Live</span>
         </span>
-        <div className="flex items-center">
+        <div className="flex items-center self-center -mt-[1px]">
           <svg
-            width="24"
-            height="16"
-            viewBox="0 0 24 16"
+            width="30"
+            height="12"
+            viewBox="0 0 30 12"
             fill="none"
             stroke="currentColor"
-            strokeWidth="1.5"
+            strokeWidth="1.6"
             strokeLinecap="round"
             strokeLinejoin="round"
             className="text-blue-500"
           >
             <motion.path
-              d="M0 8 L6 8 L9 2 L12 14 L15 8 L24 8"
+              d="M0 6 L8 6 L11 1.5 L14 10.5 L18 6 L30 6"
               initial={{ pathLength: 0, opacity: 0 }}
               animate={{ 
                 pathLength: [0, 1],
                 opacity: [0, 1, 1, 0]
               }}
               transition={{ 
-                duration: 1.5,
+                duration: 1.25,
                 repeat: Infinity,
                 ease: "linear",
                 times: [0, 0.1, 0.8, 1]

@@ -79,7 +79,7 @@ export default function DashboardReveal() {
       />
 
       {/* Main content */}
-      <div className="flex flex-col px-6 md:px-16 pt-16 pb-16 gap-4 relative z-20">
+      <div className="flex flex-col px-6 md:px-16 pt-10 pb-16 gap-4 relative z-20">
 
         {/* Section label */}
         <motion.div

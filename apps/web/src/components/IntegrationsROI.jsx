@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { motion, useScroll, useTransform, useSpring, useInView } from 'framer-motion';
+import { motion, useInView, useScroll, useTransform, useSpring } from 'framer-motion';
 import { ShieldCheck, Clock, BarChart3, Zap, CheckCircle } from 'lucide-react';
 
 const EMR_LOGOS = ['Athena', 'Epic', 'eCW', 'Cerner', 'NextGen', 'Allscripts', 'Elation', 'ModMed'];
@@ -40,16 +40,8 @@ const ANGLE_STEP = 360 / EMR_LOGOS.length;
 export default function IntegrationsROI() {
   const sectionRef = useRef(null);
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start end', 'end start'] });
-
-  // Staggered Y parallax for each card
-  const y0 = useTransform(scrollYProgress, [0, 1], [40, -40]);
-  const y1 = useTransform(scrollYProgress, [0, 1], [20, -60]);
-  const y2 = useTransform(scrollYProgress, [0, 1], [60, -20]);
-  const y3 = useTransform(scrollYProgress, [0, 1], [10, -50]);
-  const cardMotions = [y0, y1, y2, y3];
-
-  const orbitRotate = useTransform(scrollYProgress, [0, 1], [0, 60]);
-  const orbitRotateSpring = useSpring(orbitRotate, { stiffness: 60, damping: 20 });
+  const orbitRotate = useTransform(scrollYProgress, [0, 1], [0, 36]);
+  const orbitRotateSpring = useSpring(orbitRotate, { stiffness: 28, damping: 24, mass: 0.8 });
 
   return (
     <section ref={sectionRef} className="w-full bg-background py-24 border-y border-border relative overflow-hidden">
@@ -117,7 +109,7 @@ export default function IntegrationsROI() {
               {/* Orbiting EMR labels */}
               <motion.div
                 className="absolute inset-0"
-                style={{ rotate: orbitRotateSpring }}
+                style={{ rotate: orbitRotateSpring, willChange: 'transform' }}
               >
                 {EMR_LOGOS.map((name, i) => {
                   const angle = (ANGLE_STEP * i * Math.PI) / 180;
@@ -146,14 +138,17 @@ export default function IntegrationsROI() {
           </div>
 
           {/* Floating Stat Cards */}
-          <div className="relative grid grid-cols-2 gap-5">
+          <div className="relative grid grid-cols-2 gap-5 items-stretch">
             {STATS.map((stat, i) => {
               const Icon = stat.icon;
               return (
                 <motion.div
                   key={i}
-                  className="bg-white border border-slate-200 rounded-[1.75rem] p-6 flex flex-col gap-3 relative overflow-hidden group shadow-sm hover:shadow-md transition-shadow"
-                  style={{ y: cardMotions[i] }}
+                  className="bg-white border border-slate-200 rounded-[1.75rem] p-6 min-h-[190px] flex flex-col justify-between gap-3 relative overflow-hidden group shadow-sm hover:shadow-md transition-shadow"
+                  initial={{ opacity: 0, y: 24 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.2 }}
+                  transition={{ delay: i * 0.06, duration: 0.5, ease: 'easeOut' }}
                   whileHover={{
                     borderColor: `${stat.color}50`,
                     transition: { duration: 0.3 },
