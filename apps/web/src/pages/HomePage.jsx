@@ -237,21 +237,21 @@ const HomePage = () => {
         </div>
 
         {/* ── Spacer for Scroll Fade ── */}
-        <div style={{ height: '20vh' }} className="pointer-events-none w-full" />
+        <div style={{ height: '12vh' }} className="pointer-events-none w-full" />
 
-        {/* ── Dashboard Section (Fullscreen) ── */}
-        <div className="relative w-full z-[100] pointer-events-auto">
+        {/* ── Continuous Below-The-Legs Narrative Canvas ── */}
+        <div
+          className="relative w-full z-[100] pointer-events-auto"
+          style={{
+            background:
+              'linear-gradient(180deg, #070D18 0%, #050A14 34%, #070D18 72%, #040911 100%)',
+          }}
+        >
           <DashboardReveal />
+          <NeuralPipeline />
+          <IntegrationsROI />
+          <FinalCTA />
         </div>
-
-        {/* ── Neural Pipeline Section ── */}
-        <NeuralPipeline />
-
-        {/* ── Integrations & ROI ── */}
-        <IntegrationsROI />
-
-        {/* ── Final CTA ── */}
-        <FinalCTA />
 
       </div>
 

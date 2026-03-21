@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, useInView, AnimatePresence } from 'framer-motion';
-import { Activity, Phone, UserCheck, TrendingUp, ShieldCheck, Database } from 'lucide-react';
+import { Activity, Phone, UserCheck, TrendingUp, ShieldCheck, Database, CircleGauge, BellRing } from 'lucide-react';
 
 const LOG_ENTRIES = [
   { time: '14:22:04', event: 'ANI Match: Patient #9281 identified', type: 'info' },
@@ -36,13 +36,12 @@ function AnimatedCounter({ target, duration = 2 }) {
   return <span ref={ref}>{display}</span>;
 }
 
-const HEARTBEAT_PATH = "M0,50 L30,50 L45,15 L55,85 L65,50 L80,50 L90,35 L100,65 L110,50 L130,50 L145,20 L155,80 L165,50 L200,50 L210,40 L220,60 L230,50 L280,50 L290,25 L300,75 L310,50 L350,50 L360,30 L370,70 L380,50 L400,50";
+const PULSE_PATH = 'M0,36 L20,36 L30,24 L40,48 L50,36 L70,36 L84,20 L96,52 L108,36 L140,36 L154,28 L166,44 L178,36 L220,36 L236,22 L248,50 L260,36 L320,36';
 
 export default function DashboardReveal() {
   const sectionRef = useRef(null);
   const inView = useInView(sectionRef, { once: true, margin: '-80px' });
   const [visibleLogs, setVisibleLogs] = useState(LOG_ENTRIES.slice(0, 3));
-  const [logIndex, setLogIndex] = useState(0);
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -50,16 +49,13 @@ export default function DashboardReveal() {
   });
 
   const cardZ = useTransform(scrollYProgress, [0, 0.5], [0, 18]);
-  const chartZ = useTransform(scrollYProgress, [0, 0.5], [0, -8]);
+  const feedZ = useTransform(scrollYProgress, [0, 0.5], [0, -8]);
 
   useEffect(() => {
     if (!inView) return;
     const interval = setInterval(() => {
-      setLogIndex(prev => {
-        const next = (prev + 1) % (LOG_ENTRIES.length - 2);
-        setVisibleLogs(LOG_ENTRIES.slice(next, next + 3));
-        return next;
-      });
+      const next = Math.floor(Math.random() * (LOG_ENTRIES.length - 2));
+      setVisibleLogs(LOG_ENTRIES.slice(next, next + 3));
     }, 3000);
     return () => clearInterval(interval);
   }, [inView]);
@@ -68,6 +64,13 @@ export default function DashboardReveal() {
     { label: 'Patient IDs', raw: 4821, icon: UserCheck, color: 'text-blue-400', trend: '+12%' },
     { label: 'Calls Automated', raw: 98.4, suffix: '%', icon: Phone, color: 'text-indigo-400', trend: 'Peak' },
     { label: 'EMR Entries', raw: 1240, icon: Database, color: 'text-slate-400', trend: 'Direct' },
+  ];
+
+  const operationRows = [
+    { label: 'Inbound calls active', value: '18', tone: 'text-blue-300' },
+    { label: 'AI triage queue', value: '04', tone: 'text-slate-200' },
+    { label: 'Scheduling confirmations', value: '31', tone: 'text-emerald-300' },
+    { label: 'Escalations', value: '02', tone: 'text-amber-300' },
   ];
 
   return (
@@ -135,7 +138,7 @@ export default function DashboardReveal() {
       </motion.div>
 
       {/* Main content — fills remaining screen height */}
-      <div className="flex-1 flex flex-col md:flex-row px-8 md:px-16 py-10 gap-8" style={{ transformStyle: 'preserve-3d' }}>
+      <div className="flex-1 flex flex-col md:flex-row px-8 md:px-16 py-8 gap-6" style={{ transformStyle: 'preserve-3d' }}>
 
         {/* LEFT: Stat cards */}
         <motion.div
@@ -195,12 +198,12 @@ export default function DashboardReveal() {
           </motion.div>
         </motion.div>
 
-        {/* RIGHT: Chart + live log */}
+        {/* RIGHT: Operations + live log */}
         <motion.div
           className="flex-1 flex flex-col gap-6 min-h-0"
-          style={{ translateZ: chartZ }}
+          style={{ translateZ: feedZ }}
         >
-          {/* Neural Activity chart panel */}
+          {/* Operations command panel */}
           <motion.div
             className="flex-1 rounded-3xl p-6 relative overflow-hidden"
             style={{ background: 'rgba(255,255,255,0.025)', border: '1px solid rgba(255,255,255,0.05)' }}
@@ -208,68 +211,71 @@ export default function DashboardReveal() {
             animate={inView ? { opacity: 1, y: 0 } : {}}
             transition={{ delay: 0.35, duration: 0.6 }}
           >
-            {/* Ambient glow */}
             <div className="absolute top-0 right-0 w-80 h-80 rounded-full blur-[100px] pointer-events-none"
-              style={{ background: 'radial-gradient(circle, rgba(37,99,235,0.08), transparent 70%)' }} />
+              style={{ background: 'radial-gradient(circle, rgba(148,163,184,0.08), transparent 70%)' }} />
 
-            <div className="flex justify-between items-center mb-6 relative z-10">
-              <div>
-                <h4 className="text-xs font-black uppercase tracking-[0.25em] text-white">Neural Activity</h4>
-                <p className="text-[10px] text-slate-600 mt-0.5">Real-time inference load — all clinics</p>
+            <div className="grid grid-cols-12 gap-4 h-full relative z-10">
+              <div className="col-span-12 lg:col-span-8 rounded-2xl border border-white/5 bg-black/10 p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <div>
+                    <h4 className="text-xs font-black uppercase tracking-[0.25em] text-white">Operations Matrix</h4>
+                    <p className="text-[10px] text-slate-500 mt-0.5">Live command layer across clinics</p>
+                  </div>
+                  <div className="flex items-center gap-2 text-slate-300">
+                    <CircleGauge size={14} />
+                    <span className="text-[10px] font-semibold">Latency 74ms</span>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  {operationRows.map((row) => (
+                    <div key={row.label} className="rounded-xl border border-white/5 bg-white/[0.02] px-3 py-2">
+                      <div className="text-[9px] text-slate-500 uppercase tracking-wider">{row.label}</div>
+                      <div className={`text-2xl font-black mt-1 ${row.tone}`}>{row.value}</div>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-4 h-[54px] rounded-xl border border-white/5 bg-black/20 px-3 py-2">
+                  <div className="text-[9px] text-slate-500 uppercase tracking-wider mb-1">Biometric signal rail</div>
+                  <svg viewBox="0 0 320 72" className="w-full h-[26px]">
+                    <motion.path
+                      d={PULSE_PATH}
+                      fill="none"
+                      stroke="#60A5FA"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      initial={{ pathLength: 0.1, opacity: 0.4 }}
+                      animate={{ pathLength: [0.1, 1], opacity: [0.4, 1, 0.5] }}
+                      transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
+                    />
+                  </svg>
+                </div>
               </div>
-              <div className="flex gap-2">
-                {['24h', '7d', '30d'].map((t, i) => (
-                  <button key={t} className={`px-3 py-1 rounded-full text-[9px] font-bold uppercase transition-all ${i === 0 ? 'bg-blue-600 text-white' : 'bg-white/5 text-slate-500 hover:bg-white/10'}`}>
-                    {t}
-                  </button>
-                ))}
+
+              <div className="col-span-12 lg:col-span-4 rounded-2xl border border-white/5 bg-black/10 p-4 flex flex-col">
+                <div className="flex items-center gap-2 mb-3">
+                  <BellRing size={12} className="text-slate-400" />
+                  <span className="text-[9px] text-slate-500 uppercase tracking-[0.2em]">Command events</span>
+                </div>
+                <div className="flex-1 space-y-2">
+                  {[
+                    'Triage confidence spike detected',
+                    'On-call physician ping delivered',
+                    'Insurance validation completed',
+                    'Patient reminder scheduled',
+                  ].map((item, idx) => (
+                    <motion.div
+                      key={item}
+                      className="rounded-lg bg-white/[0.03] border border-white/5 px-2.5 py-2 text-[10px] text-slate-300"
+                      initial={{ opacity: 0, x: 10 }}
+                      animate={inView ? { opacity: 1, x: 0 } : {}}
+                      transition={{ delay: 0.5 + idx * 0.1 }}
+                    >
+                      {item}
+                    </motion.div>
+                  ))}
+                </div>
               </div>
             </div>
-
-            {/* Heartbeat SVG */}
-            <div className="w-full relative" style={{ height: 'clamp(80px, 20vh, 160px)' }}>
-              <svg viewBox="0 0 400 100" className="w-full h-full" preserveAspectRatio="none">
-                <defs>
-                  <linearGradient id="hbGrad2" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#2563eb" stopOpacity="0.2" />
-                    <stop offset="100%" stopColor="#2563eb" stopOpacity="0" />
-                  </linearGradient>
-                </defs>
-                <motion.path
-                  d={`${HEARTBEAT_PATH} L400,100 L0,100 Z`}
-                  fill="url(#hbGrad2)"
-                  initial={{ opacity: 0 }}
-                  animate={inView ? { opacity: 1 } : {}}
-                  transition={{ delay: 0.9, duration: 0.5 }}
-                />
-                <motion.path
-                  d={HEARTBEAT_PATH}
-                  fill="none"
-                  stroke="#2563eb"
-                  strokeWidth="1.6"
-                  strokeLinecap="round"
-                  style={{ filter: 'drop-shadow(0 0 5px rgba(37,99,235,0.7))' }}
-                  initial={{ pathLength: 0, opacity: 0 }}
-                  animate={inView ? { pathLength: [0, 1], opacity: [0, 1, 1, 0.7] } : {}}
-                  transition={{ delay: 0.7, duration: 2.2, ease: 'easeInOut', repeat: Infinity, repeatDelay: 0.6 }}
-                />
-              </svg>
-              {/* Pulse dot */}
-              <motion.div
-                className="absolute"
-                style={{ top: '18%', right: '12%' }}
-                animate={{ opacity: [1, 0.3, 1], scale: [1, 1.5, 1] }}
-                transition={{ duration: 1.2, repeat: Infinity }}
-              >
-                <div className="w-2.5 h-2.5 rounded-full bg-blue-500 shadow-[0_0_10px_rgba(37,99,235,0.9)]" />
-              </motion.div>
-            </div>
-
-            {/* Grid lines */}
-            <div className="absolute inset-0 pointer-events-none" style={{
-              backgroundImage: 'linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)',
-              backgroundSize: '60px 40px',
-            }} />
           </motion.div>
 
           {/* Live event log */}

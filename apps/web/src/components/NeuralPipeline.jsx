@@ -8,8 +8,8 @@ const STEPS = [
     icon: Phone,
     label: 'Step 01',
     title: 'Call Received',
-    color: '#2563EB',
-    colorSoft: 'rgba(37,99,235,0.12)',
+    color: '#3B82F6',
+    colorSoft: 'rgba(148,163,184,0.10)',
     tags: ['ANI Match', 'Voice ID'],
     content: (
       <div className="mt-5 bg-black/20 rounded-2xl border border-white/5 p-4 font-mono text-[11px] leading-relaxed text-slate-300 space-y-1.5">
@@ -25,8 +25,8 @@ const STEPS = [
     icon: BrainCircuit,
     label: 'Step 02',
     title: 'AI Triage',
-    color: '#7C3AED',
-    colorSoft: 'rgba(124,58,237,0.12)',
+    color: '#64748B',
+    colorSoft: 'rgba(148,163,184,0.16)',
     tags: ['LLM-v4', 'Real-time'],
     content: (
       <div className="mt-5 space-y-3">
@@ -34,9 +34,25 @@ const STEPS = [
           <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Intent</span>
           <div className="flex gap-2">
             {['APPOINTMENT', 'URGENT'].map((b, i) => (
-              <span key={b} className={`text-[8px] font-black px-2 py-1 rounded-md uppercase tracking-wider ${i === 0 ? 'bg-blue-600/30 text-blue-300' : 'bg-red-600/30 text-red-300'}`}>{b}</span>
+              <span key={b} className={`text-[8px] font-black px-2 py-1 rounded-md uppercase tracking-wider ${i === 0 ? 'bg-slate-600/40 text-slate-200' : 'bg-red-600/30 text-red-300'}`}>{b}</span>
             ))}
           </div>
+        </div>
+        <div className="rounded-xl border border-white/8 bg-black/20 px-3 py-2">
+          <div className="text-[9px] text-slate-500 uppercase tracking-wider mb-1">Neural pulse</div>
+          <svg viewBox="0 0 240 44" className="w-full h-6">
+            <motion.path
+              d="M0,24 L14,24 L22,14 L32,32 L42,24 L65,24 L73,12 L82,34 L94,24 L120,24 L132,18 L140,30 L152,24 L188,24 L198,14 L208,34 L220,24 L240,24"
+              fill="none"
+              stroke="#60A5FA"
+              strokeWidth="2"
+              strokeLinecap="round"
+              initial={{ pathLength: 0.1, opacity: 0.5 }}
+              whileInView={{ pathLength: [0.1, 1], opacity: [0.5, 1, 0.6] }}
+              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+              viewport={{ once: true }}
+            />
+          </svg>
         </div>
         <div>
           <div className="flex justify-between mb-1">
@@ -76,8 +92,8 @@ const STEPS = [
     icon: CalendarCheck,
     label: 'Step 03',
     title: 'Auto-Schedule',
-    color: '#059669',
-    colorSoft: 'rgba(5,150,105,0.12)',
+    color: '#10B981',
+    colorSoft: 'rgba(148,163,184,0.10)',
     tags: ['Real-Time', 'EHR Sync'],
     content: (
       <div className="mt-5">
@@ -105,8 +121,8 @@ const STEPS = [
     icon: FileText,
     label: 'Step 04',
     title: 'EMR Sync',
-    color: '#0EA5E9',
-    colorSoft: 'rgba(14,165,233,0.12)',
+    color: '#475569',
+    colorSoft: 'rgba(148,163,184,0.14)',
     tags: ['HL7/FHIR', 'No Manual Entry'],
     content: (
       <div className="mt-5 bg-black/20 border border-white/5 rounded-2xl p-4 space-y-2 font-mono text-[10px]">
@@ -145,19 +161,19 @@ export default function NeuralPipeline() {
   });
 
   // Map vertical scroll to horizontal translate
-  const x = useTransform(scrollYProgress, [0, 1], ['0%', '-75%']);
+  const x = useTransform(scrollYProgress, [0, 1], ['0%', '-74%']);
   // Connecting SVG line draw
   const pathLength = useTransform(scrollYProgress, [0, 1], [0, 1]);
 
   return (
-    <section ref={sectionRef} className="relative" style={{ height: '280vh', background: '#050A14' }}>
+    <section ref={sectionRef} className="relative" style={{ height: '220vh', background: '#050A14' }}>
       {/* Sticky wrapper */}
       <div className="sticky top-0 h-screen overflow-hidden flex flex-col justify-center" style={{ background: '#050A14' }}>
 
         {/* Section header */}
-        <div className="text-center pt-6 pb-4 px-6 shrink-0">
+        <div className="text-center pt-4 pb-2 px-6 shrink-0">
           <motion.p
-            className="text-[10px] font-black uppercase tracking-[0.4em] text-blue-500 mb-3"
+            className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-300 mb-2"
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -174,7 +190,7 @@ export default function NeuralPipeline() {
             One patient. Four moments.
           </motion.h2>
           <motion.p
-            className="text-sm text-slate-500 mt-2 max-w-xl mx-auto font-medium"
+            className="text-sm text-slate-400 mt-1 max-w-xl mx-auto font-medium"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
@@ -185,14 +201,14 @@ export default function NeuralPipeline() {
         </div>
 
         {/* Horizontal scroll track */}
-        <div className="relative flex-1 overflow-hidden px-[10vw]">
+        <div className="relative flex-1 overflow-hidden px-[7vw]">
           {/* Connecting SVG line */}
           <div className="absolute top-1/2 left-0 w-full h-px pointer-events-none" style={{ transform: 'translateY(-50%)' }}>
             <svg className="w-full h-16" style={{ overflow: 'visible', marginTop: '-32px' }} preserveAspectRatio="none">
               <motion.path
                 d="M0,32 Q25%,16 50%,32 Q75%,48 100%,32"
                 fill="none"
-                stroke="rgba(37,99,235,0.3)"
+                stroke="rgba(148,163,184,0.35)"
                 strokeWidth="1.5"
                 strokeDasharray="6 4"
                 style={{ pathLength }}
@@ -202,7 +218,7 @@ export default function NeuralPipeline() {
 
           <motion.div
             ref={trackRef}
-            className="flex items-center gap-6 h-full"
+            className="flex items-center gap-5 h-full"
             style={{ x, width: `${STEPS.length * 90}vw` }}
           >
             {STEPS.map((step, i) => {
@@ -210,7 +226,7 @@ export default function NeuralPipeline() {
               return (
                 <motion.div
                   key={step.id}
-                  className="shrink-0 w-[75vw] md:w-[420px] h-auto bg-[#0B1220] border border-white/8 rounded-[2rem] p-8 relative overflow-hidden focus-card-scanlines"
+                  className="shrink-0 w-[74vw] md:w-[410px] h-auto bg-[#0B1220]/95 border border-white/10 rounded-[2rem] p-7 relative overflow-hidden focus-card-scanlines"
                   initial={{ opacity: 0, scale: 0.96 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true, margin: '-50px' }}

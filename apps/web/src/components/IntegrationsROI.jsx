@@ -28,10 +28,10 @@ function SpringCounter({ target, suffix = '', prefix = '', decimal = false }) {
 }
 
 const STATS = [
-  { label: 'Appointment Accuracy', value: '99.2', suffix: '%', decimal: true, icon: ShieldCheck, color: '#2563EB', depth: 0, offsetX: 0, offsetY: 0 },
-  { label: 'Clinician Hours Saved', value: '14', suffix: 'h', sub: '/week', icon: Clock, color: '#7C3AED', depth: 12, offsetX: -6, offsetY: 8 },
-  { label: 'No-Show Reduction', value: '40', suffix: '%', icon: BarChart3, color: '#059669', depth: 24, offsetX: 6, offsetY: -4 },
-  { label: 'Inbound Automation', value: '100', suffix: '%', sub: '24/7', icon: Zap, color: '#0EA5E9', depth: 6, offsetX: -3, offsetY: 16 },
+  { label: 'Appointment Accuracy', value: '99.2', suffix: '%', decimal: true, icon: ShieldCheck, color: '#3B82F6', depth: 0, offsetX: 0, offsetY: 0 },
+  { label: 'Clinician Hours Saved', value: '14', suffix: 'h', sub: '/week', icon: Clock, color: '#64748B', depth: 12, offsetX: -6, offsetY: 8 },
+  { label: 'No-Show Reduction', value: '40', suffix: '%', icon: BarChart3, color: '#10B981', depth: 24, offsetX: 6, offsetY: -4 },
+  { label: 'Inbound Automation', value: '100', suffix: '%', sub: '24/7', icon: Zap, color: '#475569', depth: 6, offsetX: -3, offsetY: 16 },
 ];
 
 // Orbital EMR ring angles
@@ -52,17 +52,17 @@ export default function IntegrationsROI() {
   const orbitRotateSpring = useSpring(orbitRotate, { stiffness: 60, damping: 20 });
 
   return (
-    <section ref={sectionRef} className="w-full bg-[#070D18] py-32 border-y border-white/5 relative overflow-hidden">
+    <section ref={sectionRef} className="w-full bg-[#0A0F19] py-24 border-y border-white/5 relative overflow-hidden">
       {/* Ambient glow */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-blue-900/10 blur-[120px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-slate-400/10 blur-[120px]" />
       </div>
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         {/* Header */}
         <div className="text-center mb-20">
           <motion.p
-            className="text-[10px] font-black uppercase tracking-[0.4em] text-blue-500 mb-4"
+            className="text-[10px] font-black uppercase tracking-[0.4em] text-slate-300 mb-4"
             initial={{ opacity: 0, y: 10 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -135,7 +135,7 @@ export default function IntegrationsROI() {
                         height: 28,
                       }}
                     >
-                      <div className="bg-[#0F1929] border border-white/8 rounded-lg px-2 py-1 text-[8px] font-black uppercase tracking-wider text-slate-400 whitespace-nowrap shadow-lg hover:border-blue-500/40 hover:text-slate-200 transition-colors cursor-default">
+                      <div className="bg-[#0F1929] border border-white/8 rounded-lg px-2 py-1 text-[8px] font-black uppercase tracking-wider text-slate-400 whitespace-nowrap shadow-lg hover:border-slate-300/40 hover:text-slate-200 transition-colors cursor-default">
                         {name}
                       </div>
                     </motion.div>
@@ -214,7 +214,7 @@ export default function IntegrationsROI() {
             >
               {[...EMR_LOGOS, ...EMR_LOGOS].map((emr, i) => (
                 <div key={i} className="flex items-center gap-2 group cursor-default">
-                  <div className="h-1.5 w-1.5 rounded-full bg-blue-500/30 group-hover:bg-blue-500 transition-colors" />
+                  <div className="h-1.5 w-1.5 rounded-full bg-slate-400/30 group-hover:bg-blue-400 transition-colors" />
                   <span className="text-lg font-black text-slate-700 group-hover:text-slate-300 transition-colors tracking-tighter uppercase italic select-none">
                     {emr}
                   </span>

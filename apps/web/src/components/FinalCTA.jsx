@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { motion, useInView, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight, Sparkles, ShieldCheck, Lock, Cpu } from 'lucide-react';
 
 const TRUST_BADGES = [
@@ -11,11 +11,14 @@ const TRUST_BADGES = [
 export default function FinalCTA() {
   const sectionRef = useRef(null);
   const inView = useInView(sectionRef, { once: true, margin: '-100px' });
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start end', 'end start'] });
+  const backPlaneY = useTransform(scrollYProgress, [0, 1], [30, -20]);
+  const frontPlaneY = useTransform(scrollYProgress, [0, 1], [0, -40]);
 
   return (
     <section
       ref={sectionRef}
-      className="relative w-full min-h-screen flex items-center justify-center overflow-hidden"
+      className="relative w-full min-h-[96vh] flex items-center justify-center overflow-hidden"
       style={{ background: '#040911' }}
     >
       {/* Radial clip-path reveal — wipes the entire screen */}
@@ -27,7 +30,7 @@ export default function FinalCTA() {
       />
 
       {/* Deep ambient glows */}
-      <div className="absolute inset-0 pointer-events-none">
+      <motion.div className="absolute inset-0 pointer-events-none" style={{ y: backPlaneY }}>
         <motion.div
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[900px] h-[900px] rounded-full"
           style={{ background: 'radial-gradient(circle, rgba(37,99,235,0.1) 0%, transparent 65%)' }}
@@ -46,12 +49,13 @@ export default function FinalCTA() {
           animate={inView ? { opacity: 1 } : { opacity: 0 }}
           transition={{ delay: 0.6, duration: 1 }}
         />
-      </div>
+      </motion.div>
 
       {/* Subtle grid */}
-      <div className="absolute inset-0 pointer-events-none opacity-20" style={{
+      <motion.div className="absolute inset-0 pointer-events-none opacity-20" style={{
         backgroundImage: 'linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px)',
         backgroundSize: '80px 80px',
+        y: backPlaneY,
       }} />
 
       {/* Horizontal scan line */}
@@ -63,7 +67,7 @@ export default function FinalCTA() {
       />
 
       {/* Content */}
-      <div className="relative z-10 flex flex-col items-center text-center px-6 py-20 max-w-4xl mx-auto">
+      <motion.div className="relative z-10 flex flex-col items-center text-center px-6 py-16 max-w-4xl mx-auto" style={{ y: frontPlaneY }}>
 
         {/* Biometric unlock icon */}
         <motion.div
@@ -213,7 +217,7 @@ export default function FinalCTA() {
             );
           })}
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }
