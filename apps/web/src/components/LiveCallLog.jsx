@@ -23,8 +23,9 @@ const LiveCallLog = () => {
     { id: 1, time: '12:04:22', type: 'INBOUND_CALL', content: 'Patient #9921 → routing...' },
     { id: 2, time: '12:04:25', type: 'AI_STATUS', content: 'Scheduling appointment confirmed' },
     { id: 3, time: '12:04:31', type: 'EMR_SYNC', content: 'Record updated → Dr. Mitch' },
+    { id: 4, time: '12:04:36', type: 'APPOINTMENT', content: 'New slot booked: tomorrow at 11:30 AM' },
   ]);
-  const logIdCounter = useRef(10);
+  const logIdCounter = useRef(11);
 
   const { scrollY } = useScroll();
   const opacityOut = useTransform(scrollY, [0, 400], [1, 0]);
@@ -71,12 +72,51 @@ const LiveCallLog = () => {
     <motion.div 
       className="fixed z-[150] pointer-events-none"
       style={{ 
-        bottom: '2rem', right: '2.5rem', width: '300px',
+        bottom: '1rem', right: '2.5rem', width: '300px',
         opacity: opacityOut, 
         scale: scaleOut, 
         filter: blurOut 
       }}
     >
+      {/* Live Label */}
+      <motion.div 
+        className="mb-2 flex items-center justify-end gap-2 px-2"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+      >
+        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-blue-500">
+          Neural Feed Live
+        </span>
+        <div className="flex items-center">
+          <svg
+            width="24"
+            height="16"
+            viewBox="0 0 24 16"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="text-blue-500"
+          >
+            <motion.path
+              d="M0 8 L6 8 L9 2 L12 14 L15 8 L24 8"
+              initial={{ pathLength: 0, opacity: 0 }}
+              animate={{ 
+                pathLength: [0, 1],
+                opacity: [0, 1, 1, 0]
+              }}
+              transition={{ 
+                duration: 1.5,
+                repeat: Infinity,
+                ease: "linear",
+                times: [0, 0.1, 0.8, 1]
+              }}
+            />
+          </svg>
+        </div>
+      </motion.div>
+
       <div 
         className="flex flex-col items-end"
         style={{
@@ -132,45 +172,6 @@ const LiveCallLog = () => {
           </AnimatePresence>
         </div>
       </div>
-      
-      {/* Live Label */}
-      <motion.div 
-        className="mt-3 flex items-center justify-end gap-2 px-2"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-      >
-        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-blue-500">
-          Neural Feed Live
-        </span>
-        <div className="flex items-center">
-          <svg
-            width="24"
-            height="16"
-            viewBox="0 0 24 16"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="text-blue-500"
-          >
-            <motion.path
-              d="M0 8 L6 8 L9 2 L12 14 L15 8 L24 8"
-              initial={{ pathLength: 0, opacity: 0 }}
-              animate={{ 
-                pathLength: [0, 1],
-                opacity: [0, 1, 1, 0]
-              }}
-              transition={{ 
-                duration: 1.5,
-                repeat: Infinity,
-                ease: "linear",
-                times: [0, 0.1, 0.8, 1]
-              }}
-            />
-          </svg>
-        </div>
-      </motion.div>
     </motion.div>,
     document.body
   );

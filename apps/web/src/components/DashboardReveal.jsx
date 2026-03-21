@@ -70,12 +70,20 @@ export default function DashboardReveal() {
       ref={sectionRef}
       className="relative w-full flex flex-col bg-background"
     >
+      {/* Gradient bridge — fades in over the robot legs above */}
+      <div
+        className="absolute top-0 inset-x-0 h-32 pointer-events-none z-10"
+        style={{
+          background: 'linear-gradient(to bottom, rgba(237, 237, 255, 0) 0%, rgba(237, 237, 255, 0.55) 35%, rgba(237, 237, 255, 0.97) 72%, hsl(243 100% 96%) 100%)',
+        }}
+      />
+
       {/* Main content */}
-      <div className="flex flex-col px-6 md:px-16 pt-10 pb-16 gap-6">
+      <div className="flex flex-col px-6 md:px-16 pt-16 pb-16 gap-4 relative z-20">
 
         {/* Section label */}
         <motion.div
-          className="text-center mb-4"
+          className="text-center mb-1"
           initial={{ opacity: 0, y: 16 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.5 }}

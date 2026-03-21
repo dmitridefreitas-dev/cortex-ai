@@ -237,11 +237,51 @@ const HomePage = () => {
         </div>
 
         {/* ── Continuous Below-The-Legs Narrative Canvas ── */}
-        <div className="relative w-full z-[100] pointer-events-auto bg-background">
-          <DashboardReveal />
-          <NeuralPipeline />
-          <IntegrationsROI />
-          <FinalCTA />
+        <div className="relative w-full z-[100] pointer-events-auto bg-background -mt-[100vh]">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.1 }}
+            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <DashboardReveal />
+          </motion.div>
+
+          {/* Divider */}
+          <div className="h-px mx-8 md:mx-20" style={{ background: 'linear-gradient(to right, transparent, hsl(214 32% 80%), transparent)' }} />
+
+          <motion.div
+            initial={{ opacity: 0, y: 60 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.15 }}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <NeuralPipeline />
+          </motion.div>
+
+          {/* Divider */}
+          <div className="h-px mx-8 md:mx-20" style={{ background: 'linear-gradient(to right, transparent, hsl(214 32% 80%), transparent)' }} />
+
+          <motion.div
+            initial={{ opacity: 0, y: 60 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.15 }}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <IntegrationsROI />
+          </motion.div>
+
+          {/* Divider */}
+          <div className="h-px mx-8 md:mx-20" style={{ background: 'linear-gradient(to right, transparent, hsl(214 32% 80%), transparent)' }} />
+
+          <motion.div
+            initial={{ opacity: 0, y: 60 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.15 }}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <FinalCTA />
+          </motion.div>
         </div>
 
       </div>

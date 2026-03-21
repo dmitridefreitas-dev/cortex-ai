@@ -1,5 +1,5 @@
-import React, { useRef, useEffect, useState } from 'react';
-import { motion, useAnimationControls, useInView } from 'framer-motion';
+import React, { useRef, useState } from 'react';
+import { motion, useInView } from 'framer-motion';
 import { Brain, Mic, ClipboardList, CalendarCheck, MessageSquare, ShieldCheck } from 'lucide-react';
 
 const STEPS = [
@@ -80,43 +80,14 @@ const STEPS = [
 
 const CARD_WIDTH = 340;
 const CARD_GAP = 24;
-const CARD_STRIDE = CARD_WIDTH + CARD_GAP;
 
 export default function NeuralPipeline() {
   const sectionRef = useRef(null);
   const inView = useInView(sectionRef, { once: true, margin: '-80px' });
-  const controls = useAnimationControls();
   const [paused, setPaused] = useState(false);
-  const posRef = useRef(0);
-  const animRef = useRef(null);
-  const lastTimestamp = useRef(null);
-  const SPEED = 0.08; // px per ms — slow, smooth drift
 
   // Double the steps for seamless loop
   const DOUBLED = [...STEPS, ...STEPS];
-  const TOTAL_WIDTH = STEPS.length * CARD_STRIDE;
-
-  useEffect(() => {
-    if (!inView) return;
-
-    const tick = (timestamp) => {
-      if (paused) {
-        lastTimestamp.current = null;
-        animRef.current = requestAnimationFrame(tick);
-        return;
-      }
-      if (lastTimestamp.current !== null) {
-        const delta = timestamp - lastTimestamp.current;
-        posRef.current = (posRef.current + SPEED * delta) % TOTAL_WIDTH;
-        controls.set({ x: -posRef.current });
-      }
-      lastTimestamp.current = timestamp;
-      animRef.current = requestAnimationFrame(tick);
-    };
-
-    animRef.current = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(animRef.current);
-  }, [inView, paused, controls, TOTAL_WIDTH]);
 
   return (
     <section ref={sectionRef} className="relative w-full bg-background overflow-hidden py-16">
@@ -161,10 +132,16 @@ export default function NeuralPipeline() {
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
       >
-        <motion.div
+        <div
           className="absolute top-0 left-0 flex"
-          style={{ gap: `${CARD_GAP}px`, paddingLeft: '6vw', paddingRight: '6vw', willChange: 'transform' }}
-          animate={controls}
+          style={{
+            gap: `${CARD_GAP}px`,
+            paddingLeft: '6vw',
+            paddingRight: '6vw',
+            willChange: 'transform',
+            animation: 'neuralMarquee 84s linear infinite',
+            animationPlayState: paused ? 'paused' : 'running',
+          }}
         >
           {DOUBLED.map((step, i) => {
             const Icon = step.icon;
@@ -232,7 +209,6 @@ export default function NeuralPipeline() {
                   <div className="w-20 h-1.5 bg-slate-100 rounded-full overflow-hidden">
                     <motion.div
                       className="h-full rounded-full"
-                      style={{ background: step.accent }}
                       initial={{ scaleX: 0 }}
                       animate={inView ? { scaleX: 1 } : {}}
                       transition={{ delay: 0.35 + (i % STEPS.length) * 0.06, duration: 0.6, ease: 'easeOut' }}
@@ -243,7 +219,7 @@ export default function NeuralPipeline() {
               </div>
             );
           })}
-        </motion.div>
+        </div>
       </div>
 
       {/* Hover hint */}
@@ -255,6 +231,15 @@ export default function NeuralPipeline() {
       >
         <p className="text-[9px] uppercase tracking-[0.3em] text-slate-400">Hover to pause</p>
       </motion.div>
+
+      <style>
+        {`
+          @keyframes neuralMarquee {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-50%, 0, 0); }
+          }
+        `}
+      </style>
     </section>
   );
 }

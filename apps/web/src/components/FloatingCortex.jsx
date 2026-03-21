@@ -43,7 +43,7 @@ const FloatingCortex = () => {
       target="_blank"
       rel="noopener noreferrer"
       className="fixed z-[100] flex items-center"
-      style={{ top: '6rem', right: '2rem', opacity: cortexOpacity, pointerEvents: cortexPointerEvents }}
+      style={{ top: '5.5rem', right: '1.75rem', opacity: cortexOpacity, pointerEvents: cortexPointerEvents }}
       aria-label="Chat with Cortex - AI receptionist"
     >
       {/* Fade-in on mount */}
@@ -54,13 +54,13 @@ const FloatingCortex = () => {
       >
         {/* Breathing wrapper — icon + bubble move together */}
         <motion.div
-          className="flex items-center gap-3 cursor-pointer"
+          className="flex items-center gap-2.5 cursor-pointer"
           animate={{ scale: [1, 1.035, 1], opacity: [1, 0.92, 1] }}
           transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut', repeatType: 'loop' }}
         >
           {/* Icon circle */}
           <div
-            className="h-[58px] w-[58px] rounded-full flex items-center justify-center flex-shrink-0 text-white"
+            className="h-[50px] w-[50px] rounded-full flex items-center justify-center flex-shrink-0 text-white"
             style={{ background: '#2563eb', boxShadow: '0 4px 20px rgba(37, 99, 235, 0.45)' }}
           >
             <motion.div
@@ -74,19 +74,19 @@ const FloatingCortex = () => {
                 ease: "easeInOut"
               }}
             >
-              <Bot className="h-7 w-7" strokeWidth={2} />
+              <Bot className="h-6 w-6" strokeWidth={2} />
             </motion.div>
           </div>
 
           {/* Chat bubble */}
           <div
-            className="bg-[#eff2fc] border border-blue-100/50 shadow-sm px-5 py-3 rounded-[22px] rounded-tl-sm"
+            className="bg-[#eff2fc] border border-blue-100/50 shadow-sm px-4 py-2.5 rounded-[20px] rounded-tl-sm"
             style={{ boxShadow: '0 3px 14px rgba(0,0,0,0.08)' }}
           >
-            <p className="text-[14px] font-bold text-[#6B7280] leading-snug">
+            <p className="text-[12px] font-bold text-[#6B7280] leading-snug">
               Hi, I'm Cortex — your AI
             </p>
-            <p className="text-[14px] font-bold text-[#6B7280] leading-snug">
+            <p className="text-[12px] font-bold text-[#6B7280] leading-snug">
               receptionist. Chat with me!
             </p>
           </div>
