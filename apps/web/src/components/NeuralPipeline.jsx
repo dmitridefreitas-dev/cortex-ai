@@ -1,245 +1,150 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { Brain, Mic, ClipboardList, CalendarCheck, MessageSquare, ShieldCheck } from 'lucide-react';
+import { Mic, Brain, ClipboardList, CalendarCheck } from 'lucide-react';
 
 const STEPS = [
   {
-    id: 'intake',
-    label: '01 — Intake',
-    title: 'Call Answered',
-    sub: 'Instantly',
-    desc: 'Cortex picks up within one ring, 24/7. Callers hear a natural voice — no hold music, no menus.',
+    number: '01',
     icon: Mic,
-    accent: '#2563EB',
-    badge: 'Live',
+    title: 'Call Answered',
+    desc: 'Cortex picks up within one ring, 24/7. Callers hear a natural voice — no hold music, no menus.',
     metric: '< 1s',
-    metricLabel: 'pickup',
-  },
-  {
-    id: 'triage',
-    label: '02 — Triage',
-    title: 'Intent Classified',
-    sub: 'Via AI',
-    desc: 'Voice models detect urgency, identify the patient via ANI, and route to the right workflow in real time.',
-    icon: Brain,
+    metricLabel: 'Pickup Time',
     accent: '#2563EB',
-    badge: 'AI',
+  },
+  {
+    number: '02',
+    icon: Brain,
+    title: 'Intent Classified',
+    desc: 'Voice AI detects urgency, identifies the patient, and routes to the right workflow in real time.',
     metric: '99.2%',
-    metricLabel: 'accuracy',
-    pulse: true,
-  },
-  {
-    id: 'emr',
-    label: '03 — EMR Sync',
-    title: 'Record Updated',
-    sub: 'Automatically',
-    desc: 'Every conversation writes directly to the patient record — no manual transcription, no lag.',
-    icon: ClipboardList,
+    metricLabel: 'Accuracy',
     accent: '#3B82F6',
-    badge: 'Sync',
+  },
+  {
+    number: '03',
+    icon: ClipboardList,
+    title: 'Record Updated',
+    desc: 'Every conversation writes directly to the patient EMR — no manual transcription, no lag.',
     metric: '< 2s',
-    metricLabel: 'write',
-  },
-  {
-    id: 'schedule',
-    label: '04 — Scheduling',
-    title: 'Slot Confirmed',
-    sub: 'In Real Time',
-    desc: 'Cortex checks availability, confirms the appointment, and sends an instant SMS confirmation.',
-    icon: CalendarCheck,
-    accent: '#475569',
-    badge: 'Done',
-    metric: '41%',
-    metricLabel: 'no-shows ↓',
-  },
-  {
-    id: 'followup',
-    label: '05 — Follow-Up',
-    title: 'Reminders Sent',
-    sub: 'Multi-channel',
-    desc: 'SMS, email, and phone reminders cascade automatically — so every patient shows up prepared.',
-    icon: MessageSquare,
+    metricLabel: 'EMR Write',
     accent: '#1D4ED8',
-    badge: 'Auto',
-    metric: '3x',
-    metricLabel: 'engagement',
   },
   {
-    id: 'compliance',
-    label: '06 — Compliance',
-    title: 'HIPAA Verified',
-    sub: 'Every Call',
-    desc: 'End-to-end encryption, consent capture, and audit trails baked in — no bolt-ons needed.',
-    icon: ShieldCheck,
-    accent: '#64748B',
-    badge: 'Secure',
-    metric: '100%',
-    metricLabel: 'covered',
+    number: '04',
+    icon: CalendarCheck,
+    title: 'Appointment Confirmed',
+    desc: 'Cortex books the slot, sends an SMS confirmation, and schedules automated follow-up reminders.',
+    metric: '41%',
+    metricLabel: 'Fewer No-Shows',
+    accent: '#475569',
   },
 ];
 
-const CARD_WIDTH = 340;
-const CARD_GAP = 24;
-
 export default function NeuralPipeline() {
   const sectionRef = useRef(null);
+  const lineRef = useRef(null);
   const inView = useInView(sectionRef, { once: true, margin: '-80px' });
-  const [paused, setPaused] = useState(false);
-
-  // Double the steps for seamless loop
-  const DOUBLED = [...STEPS, ...STEPS];
+  const lineInView = useInView(lineRef, { once: true, margin: '-60px' });
 
   return (
-    <section ref={sectionRef} className="relative w-full bg-background overflow-hidden py-16">
-      {/* Section header */}
-      <div className="px-6 md:px-16 mb-10 text-center">
-        <motion.p
-          className="text-[10px] font-black uppercase tracking-[0.4em] text-blue-600 mb-2"
-          initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : {}}
-          transition={{ duration: 0.4 }}
-        >
-          The Journey
-        </motion.p>
-        <motion.h2
-          className="text-3xl md:text-4xl font-black text-slate-900 tracking-tight"
-          initial={{ opacity: 0, y: 12 }}
+    <section ref={sectionRef} className="relative w-full bg-background py-24 overflow-hidden">
+      {/* Subtle ambient */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] rounded-full bg-blue-50/60 blur-[120px]" />
+      </div>
+
+      <div className="max-w-6xl mx-auto px-6 md:px-16 relative z-10">
+
+        {/* Header */}
+        <motion.div
+          className="text-center mb-20"
+          initial={{ opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.1, duration: 0.45 }}
+          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
         >
-          One patient. Four moments.
-        </motion.h2>
-        <motion.p
-          className="text-slate-500 text-sm mt-2 max-w-md mx-auto"
-          initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : {}}
-          transition={{ delay: 0.2, duration: 0.4 }}
-        >
-          Every touchpoint, handled — from first ring to follow-up.
-        </motion.p>
-      </div>
+          <p className="text-[10px] font-black uppercase tracking-[0.45em] text-blue-600 mb-3">How It Works</p>
+          <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight leading-tight">
+            Four steps.{' '}
+            <span className="text-blue-600">Fully automated.</span>
+          </h2>
+          <p className="text-slate-400 text-base mt-4 max-w-md mx-auto font-medium">
+            From first ring to confirmed appointment — zero staff involvement.
+          </p>
+        </motion.div>
 
-      {/* Connecting dashed line overlay */}
-      <div className="absolute left-0 right-0 pointer-events-none"
-        style={{ top: 'calc(16px + 10rem + 36px)' }}>
-        <div className="border-t border-dashed border-slate-200 mx-6 md:mx-16" />
-      </div>
+        {/* Timeline — desktop horizontal, mobile vertical */}
+        <div className="relative">
 
-      {/* Carousel track */}
-      <div
-        className="relative"
-        style={{ height: '340px' }}
-        onMouseEnter={() => setPaused(true)}
-        onMouseLeave={() => setPaused(false)}
-      >
-        <div
-          className="absolute top-0 left-0 flex"
-          style={{
-            gap: `${CARD_GAP}px`,
-            paddingLeft: '6vw',
-            paddingRight: '6vw',
-            willChange: 'transform',
-            animation: 'neuralMarquee 84s linear infinite',
-            animationPlayState: paused ? 'paused' : 'running',
-          }}
-        >
-          {DOUBLED.map((step, i) => {
-            const Icon = step.icon;
-            return (
-              <div
-                key={`${step.id}-${i}`}
-                className="shrink-0 bg-white border border-slate-200 rounded-3xl p-6 flex flex-col justify-between shadow-sm hover:shadow-lg transition-all duration-300 group cursor-default"
-                style={{ width: `${CARD_WIDTH}px`, height: '300px' }}
-              >
-                {/* Header */}
-                <div className="flex items-start justify-between mb-3">
-                  <div className="flex items-center gap-3">
-                    <div
-                      className="p-2.5 rounded-xl"
-                      style={{ background: `${step.accent}14` }}
-                    >
-                      <Icon size={18} style={{ color: step.accent }} />
-                    </div>
-                    <div>
-                      <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">{step.label}</p>
-                      <h3 className="text-base font-black text-slate-900 leading-tight">{step.title}</h3>
-                      <p className="text-[10px] text-slate-400">{step.sub}</p>
-                    </div>
-                  </div>
-                  <span
-                    className="text-[8px] font-black uppercase tracking-wider px-2 py-1 rounded-full shrink-0"
-                    style={{
-                      color: step.accent,
-                      background: `${step.accent}14`,
-                      border: `1px solid ${step.accent}30`,
-                    }}
-                  >
-                    {step.badge}
-                  </span>
-                </div>
+          {/* Horizontal connector line (desktop only) */}
+          <div ref={lineRef} className="hidden md:block absolute top-[2.75rem] left-0 right-0 px-[calc(12.5%)] pointer-events-none z-0">
+            <svg className="w-full h-[2px]" viewBox="0 0 900 2" preserveAspectRatio="none">
+              <line x1="0" y1="1" x2="900" y2="1" stroke="#E2E8F0" strokeWidth="2" />
+              <motion.line
+                x1="0" y1="1" x2="900" y2="1"
+                stroke="#2563EB"
+                strokeWidth="2"
+                strokeLinecap="round"
+                initial={{ pathLength: 0, opacity: 0 }}
+                animate={lineInView ? { pathLength: 1, opacity: 1 } : {}}
+                transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1], delay: 0.3 }}
+              />
+            </svg>
+          </div>
 
-                {/* Pulse SVG for AI card */}
-                {step.pulse && (
-                  <svg viewBox="0 0 220 32" className="w-full h-5 mb-2">
-                    <motion.path
-                      d="M0,16 L30,16 L42,6 L54,26 L66,16 L100,16 L116,4 L128,28 L140,16 L180,16 L194,8 L206,24 L218,16"
-                      fill="none"
-                      stroke={step.accent}
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      initial={{ pathLength: 0 }}
-                      animate={{ pathLength: [0, 1] }}
-                      transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
-                    />
-                  </svg>
-                )}
-
-                {/* Description */}
-                <p className="text-[11px] text-slate-500 leading-relaxed flex-1 mt-1">{step.desc}</p>
-
-                {/* Metric */}
-                <div
-                  className="mt-3 pt-3 border-t border-slate-100 flex items-end justify-between"
+          {/* Steps grid */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-6 relative z-10">
+            {STEPS.map((step, i) => {
+              const Icon = step.icon;
+              return (
+                <motion.div
+                  key={step.number}
+                  className="flex flex-col items-center md:items-center text-center"
+                  initial={{ opacity: 0, y: 28 }}
+                  animate={inView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ delay: 0.15 + i * 0.14, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
                 >
-                  <div>
-                    <p className="text-[9px] text-slate-400 uppercase tracking-widest">{step.metricLabel}</p>
-                    <p className="text-2xl font-black leading-none" style={{ color: step.accent }}>{step.metric}</p>
+                  {/* Circle with number + icon */}
+                  <div className="relative mb-6">
+                    {/* Outer ring */}
+                    <div
+                      className="w-[5.5rem] h-[5.5rem] rounded-full border-2 flex items-center justify-center bg-white shadow-sm"
+                      style={{ borderColor: `${step.accent}30` }}
+                    >
+                      <div
+                        className="w-16 h-16 rounded-full flex items-center justify-center"
+                        style={{ background: `${step.accent}10` }}
+                      >
+                        <Icon size={24} style={{ color: step.accent }} />
+                      </div>
+                    </div>
+                    {/* Step number badge */}
+                    <div
+                      className="absolute -top-1 -right-1 w-6 h-6 rounded-full flex items-center justify-center text-white text-[9px] font-black"
+                      style={{ background: step.accent }}
+                    >
+                      {step.number}
+                    </div>
                   </div>
-                  {/* Progress bar */}
-                  <div className="w-20 h-1.5 bg-slate-100 rounded-full overflow-hidden">
-                    <motion.div
-                      className="h-full rounded-full"
-                      initial={{ scaleX: 0 }}
-                      animate={inView ? { scaleX: 1 } : {}}
-                      transition={{ delay: 0.35 + (i % STEPS.length) * 0.06, duration: 0.6, ease: 'easeOut' }}
-                      style={{ originX: 0, background: step.accent }}
-                    />
+
+                  {/* Content */}
+                  <h3 className="text-base font-black text-slate-900 mb-2 leading-tight">{step.title}</h3>
+                  <p className="text-[12px] text-slate-400 leading-relaxed mb-5 max-w-[220px]">{step.desc}</p>
+
+                  {/* Metric */}
+                  <div
+                    className="px-4 py-2 rounded-xl border"
+                    style={{ background: `${step.accent}07`, borderColor: `${step.accent}20` }}
+                  >
+                    <p className="text-xl font-black leading-none" style={{ color: step.accent }}>{step.metric}</p>
+                    <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest mt-0.5">{step.metricLabel}</p>
                   </div>
-                </div>
-              </div>
-            );
-          })}
+                </motion.div>
+              );
+            })}
+          </div>
         </div>
       </div>
-
-      {/* Hover hint */}
-      <motion.div
-        className="text-center mt-4"
-        initial={{ opacity: 0 }}
-        animate={inView ? { opacity: 1 } : {}}
-        transition={{ delay: 0.5 }}
-      >
-        <p className="text-[9px] uppercase tracking-[0.3em] text-slate-400">Hover to pause</p>
-      </motion.div>
-
-      <style>
-        {`
-          @keyframes neuralMarquee {
-            0% { transform: translate3d(0, 0, 0); }
-            100% { transform: translate3d(-50%, 0, 0); }
-          }
-        `}
-      </style>
     </section>
   );
 }

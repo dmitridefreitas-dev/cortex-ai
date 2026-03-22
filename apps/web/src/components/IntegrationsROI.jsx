@@ -3,8 +3,47 @@ import { motion, useInView, useScroll, useTransform, useSpring } from 'framer-mo
 import { ShieldCheck, Clock, BarChart3, Zap, CheckCircle } from 'lucide-react';
 
 const EMR_LOGOS = ['Athena', 'Epic', 'eCW', 'Cerner', 'NextGen', 'Allscripts', 'Elation', 'ModMed'];
+const ANGLE_STEP = 360 / EMR_LOGOS.length;
 
-function SpringCounter({ target, suffix = '', prefix = '', decimal = false }) {
+const STATS = [
+  {
+    icon: ShieldCheck,
+    value: '99.2',
+    suffix: '%',
+    decimal: true,
+    label: 'Appointment Accuracy',
+    context: 'Measured across 450+ active practices',
+    color: '#2563EB',
+  },
+  {
+    icon: Clock,
+    value: '14',
+    suffix: 'h',
+    sub: '/week',
+    label: 'Clinician Hours Saved',
+    context: 'Per practice, reclaimed from admin work',
+    color: '#3B82F6',
+  },
+  {
+    icon: BarChart3,
+    value: '40',
+    suffix: '%',
+    label: 'No-Show Reduction',
+    context: 'Via automated multi-channel reminders',
+    color: '#1D4ED8',
+  },
+  {
+    icon: Zap,
+    value: '100',
+    suffix: '%',
+    sub: '24/7',
+    label: 'Inbound Automation',
+    context: 'Every call handled, day or night',
+    color: '#475569',
+  },
+];
+
+function SpringCounter({ target, suffix = '', sub = '', decimal = false }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: '-60px' });
   const [display, setDisplay] = useState(decimal ? '0.0' : '0');
@@ -13,208 +52,188 @@ function SpringCounter({ target, suffix = '', prefix = '', decimal = false }) {
     if (!inView) return;
     const numeric = parseFloat(String(target).replace(/[^0-9.]/g, ''));
     const start = performance.now();
-    const dur = 2200;
-    const animate = (now) => {
+    const dur = 2000;
+    const tick = (now) => {
       const p = Math.min((now - start) / dur, 1);
       const eased = 1 - Math.pow(1 - p, 4);
       const val = eased * numeric;
       setDisplay(decimal ? val.toFixed(1) : Math.round(val).toString());
-      if (p < 1) requestAnimationFrame(animate);
+      if (p < 1) requestAnimationFrame(tick);
     };
-    requestAnimationFrame(animate);
+    requestAnimationFrame(tick);
   }, [inView, target, decimal]);
 
-  return <span ref={ref}>{prefix}{display}{suffix}</span>;
+  return (
+    <span ref={ref}>
+      {display}{suffix}
+      {sub && <span className="text-lg font-bold ml-0.5">{sub}</span>}
+    </span>
+  );
 }
-
-const STATS = [
-  { label: 'Appointment Accuracy', value: '99.2', suffix: '%', decimal: true, icon: ShieldCheck, color: '#3B82F6', depth: 0, offsetX: 0, offsetY: 0 },
-  { label: 'Clinician Hours Saved', value: '14', suffix: 'h', sub: '/week', icon: Clock, color: '#64748B', depth: 12, offsetX: -6, offsetY: 8 },
-  { label: 'No-Show Reduction', value: '40', suffix: '%', icon: BarChart3, color: '#10B981', depth: 24, offsetX: 6, offsetY: -4 },
-  { label: 'Inbound Automation', value: '100', suffix: '%', sub: '24/7', icon: Zap, color: '#475569', depth: 6, offsetX: -3, offsetY: 16 },
-];
-
-// Orbital EMR ring angles
-const ANGLE_STEP = 360 / EMR_LOGOS.length;
 
 export default function IntegrationsROI() {
   const sectionRef = useRef(null);
+  const inView = useInView(sectionRef, { once: true, margin: '-80px' });
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start end', 'end start'] });
   const orbitRotate = useTransform(scrollYProgress, [0, 1], [0, 36]);
   const orbitRotateSpring = useSpring(orbitRotate, { stiffness: 28, damping: 24, mass: 0.8 });
 
   return (
-    <section ref={sectionRef} className="w-full bg-background py-24 border-y border-border relative overflow-hidden">
-      {/* Subtle ambient glow */}
+    <section ref={sectionRef} className="w-full bg-background py-24 relative overflow-hidden">
+      {/* Ambient glow */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-blue-100/40 blur-[140px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-blue-50/50 blur-[140px]" />
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
+      <div className="max-w-6xl mx-auto px-6 md:px-16 relative z-10">
+
         {/* Header */}
-        <div className="text-center mb-20">
-          <motion.p
-            className="text-[10px] font-black uppercase tracking-[0.4em] text-blue-600 mb-4"
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-          >
-            The Proof
-          </motion.p>
-          <motion.h2
-            className="text-3xl md:text-5xl font-black text-slate-900 tracking-tighter mb-4"
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-          >
-            Real results. Zero overhead.
-          </motion.h2>
-          <motion.p
-            className="text-slate-500 text-sm max-w-xl mx-auto font-medium"
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-          >
-            Measured across 450+ active practices in the first 90 days of deployment.
-          </motion.p>
+        <motion.div
+          className="text-center mb-16"
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <p className="text-[10px] font-black uppercase tracking-[0.45em] text-blue-600 mb-3">Proven Results</p>
+          <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight leading-tight">
+            Real impact.{' '}
+            <span className="text-blue-600">Measurable ROI.</span>
+          </h2>
+          <p className="text-slate-400 text-base mt-4 max-w-md mx-auto font-medium">
+            Validated across 450+ active medical practices in the first 90 days.
+          </p>
+        </motion.div>
+
+        {/* 2x2 Stat cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-20">
+          {STATS.map((stat, i) => {
+            const Icon = stat.icon;
+            return (
+              <motion.div
+                key={i}
+                className="bg-white border border-slate-100 rounded-3xl p-8 flex flex-col relative overflow-hidden group shadow-sm hover:shadow-md transition-shadow"
+                initial={{ opacity: 0, y: 28 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ delay: i * 0.1, duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+              >
+                {/* Hover glow */}
+                <div
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none rounded-3xl"
+                  style={{ background: `radial-gradient(circle at 0% 0%, ${stat.color}08, transparent 60%)` }}
+                />
+
+                {/* Icon */}
+                <div
+                  className="w-10 h-10 rounded-xl flex items-center justify-center mb-5"
+                  style={{ background: `${stat.color}12` }}
+                >
+                  <Icon size={18} style={{ color: stat.color }} />
+                </div>
+
+                {/* Number */}
+                <div className="text-5xl font-black tabular-nums tracking-tighter leading-none mb-2" style={{ color: stat.color }}>
+                  <SpringCounter
+                    target={stat.value}
+                    suffix={stat.suffix}
+                    sub={stat.sub}
+                    decimal={stat.decimal}
+                  />
+                </div>
+
+                {/* Label */}
+                <p className="text-sm font-black text-slate-800 uppercase tracking-widest mb-2">{stat.label}</p>
+
+                {/* Context */}
+                <p className="text-[11px] text-slate-400 font-medium leading-snug">{stat.context}</p>
+              </motion.div>
+            );
+          })}
         </div>
 
-        {/* Main content: orbit ring + stat cards */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        {/* EMR Integration strip */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <div className="bg-white border border-slate-100 rounded-3xl p-10 shadow-sm">
+            <div className="flex flex-col lg:flex-row items-center gap-12">
 
-          {/* EMR Integration Ring */}
-          <div className="flex items-center justify-center">
-            <div className="relative w-[340px] h-[340px]">
-              {/* Orbit rings */}
-              <div className="absolute inset-0 rounded-full border border-slate-200" />
-              <div className="absolute inset-6 rounded-full border border-dashed border-slate-200 animate-[spin_40s_linear_infinite]" />
+              {/* Orbit ring */}
+              <div className="flex-shrink-0 flex items-center justify-center">
+                <div className="relative w-[280px] h-[280px]">
+                  <div className="absolute inset-0 rounded-full border border-slate-100" />
+                  <div className="absolute inset-5 rounded-full border border-dashed border-slate-100 animate-[spin_44s_linear_infinite]" />
 
-              {/* Center badge */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <motion.div
-                  className="flex flex-col items-center gap-2 bg-white border border-slate-200 rounded-2xl px-6 py-4 shadow-lg"
-                  animate={{
-                    boxShadow: ['0 4px 20px rgba(37,99,235,0.08)', '0 8px 40px rgba(37,99,235,0.18)', '0 4px 20px rgba(37,99,235,0.08)'],
-                  }}
-                  transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-                >
-                  <CheckCircle size={22} className="text-emerald-500" />
-                  <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-700">Connected</span>
-                  <span className="text-[9px] text-slate-400">{EMR_LOGOS.length} EMR systems</span>
-                </motion.div>
+                  {/* Center */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="flex flex-col items-center gap-1.5 bg-white border border-slate-100 rounded-2xl px-5 py-3 shadow-md">
+                      <CheckCircle size={20} className="text-blue-500" />
+                      <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-700">Connected</span>
+                      <span className="text-[9px] text-slate-400">{EMR_LOGOS.length} EMR systems</span>
+                    </div>
+                  </div>
+
+                  {/* Orbiting labels */}
+                  <motion.div
+                    className="absolute inset-0"
+                    style={{ rotate: orbitRotateSpring, willChange: 'transform' }}
+                  >
+                    {EMR_LOGOS.map((name, i) => {
+                      const angle = (ANGLE_STEP * i * Math.PI) / 180;
+                      const r = 122;
+                      const cx = 140 + r * Math.cos(angle);
+                      const cy = 140 + r * Math.sin(angle);
+                      return (
+                        <div
+                          key={name}
+                          className="absolute flex items-center justify-center"
+                          style={{ left: cx - 26, top: cy - 12, width: 52, height: 24 }}
+                        >
+                          <div className="bg-white border border-slate-200 rounded-lg px-2 py-1 text-[8px] font-black uppercase tracking-wider text-slate-500 whitespace-nowrap shadow-sm hover:border-blue-300 hover:text-blue-600 transition-colors cursor-default">
+                            {name}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </motion.div>
+                </div>
               </div>
 
-              {/* Orbiting EMR labels */}
-              <motion.div
-                className="absolute inset-0"
-                style={{ rotate: orbitRotateSpring, willChange: 'transform' }}
-              >
-                {EMR_LOGOS.map((name, i) => {
-                  const angle = (ANGLE_STEP * i * Math.PI) / 180;
-                  const r = 148;
-                  const cx = 170 + r * Math.cos(angle);
-                  const cy = 170 + r * Math.sin(angle);
-                  return (
-                    <motion.div
-                      key={name}
-                      className="absolute flex items-center justify-center"
-                      style={{
-                        left: cx - 28,
-                        top: cy - 14,
-                        width: 56,
-                        height: 28,
-                      }}
-                    >
-                      <div className="bg-white border border-slate-200 rounded-lg px-2 py-1 text-[8px] font-black uppercase tracking-wider text-slate-500 whitespace-nowrap shadow-sm hover:border-blue-300 hover:text-blue-600 transition-colors cursor-default">
-                        {name}
+              {/* Text block */}
+              <div className="flex-1 text-center lg:text-left">
+                <p className="text-[10px] font-black uppercase tracking-[0.35em] text-blue-600 mb-3">EMR Integrations</p>
+                <h3 className="text-2xl md:text-3xl font-black text-slate-900 tracking-tight mb-4">
+                  Works with the systems<br className="hidden lg:block" /> you already use.
+                </h3>
+                <p className="text-slate-400 text-sm font-medium leading-relaxed mb-6 max-w-sm lg:max-w-none">
+                  Cortex integrates directly with Athena, Epic, eClinicalWorks, Cerner, and 4 more — no custom dev required.
+                </p>
+
+                {/* Scrolling marquee */}
+                <div className="relative overflow-hidden [mask-image:linear-gradient(to_right,transparent,white_10%,white_90%,transparent)]">
+                  <motion.div
+                    className="flex gap-10 items-center whitespace-nowrap"
+                    animate={{ x: [0, '-50%'] }}
+                    transition={{ duration: 28, repeat: Infinity, ease: 'linear' }}
+                  >
+                    {[...EMR_LOGOS, ...EMR_LOGOS].map((emr, i) => (
+                      <div key={i} className="flex items-center gap-2 cursor-default">
+                        <div className="h-1 w-1 rounded-full bg-blue-300" />
+                        <span className="text-sm font-black text-slate-500 tracking-tighter uppercase italic select-none">
+                          {emr}
+                        </span>
                       </div>
-                    </motion.div>
-                  );
-                })}
-              </motion.div>
+                    ))}
+                  </motion.div>
+                </div>
+              </div>
             </div>
           </div>
-
-          {/* Floating Stat Cards */}
-          <div className="relative grid grid-cols-2 gap-5 items-stretch">
-            {STATS.map((stat, i) => {
-              const Icon = stat.icon;
-              return (
-                <motion.div
-                  key={i}
-                  className="bg-white border border-slate-200 rounded-[1.75rem] p-6 min-h-[190px] flex flex-col justify-between gap-3 relative overflow-hidden group shadow-sm hover:shadow-md transition-shadow"
-                  initial={{ opacity: 0, y: 24 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.2 }}
-                  transition={{ delay: i * 0.06, duration: 0.5, ease: 'easeOut' }}
-                  whileHover={{
-                    borderColor: `${stat.color}50`,
-                    transition: { duration: 0.3 },
-                  }}
-                >
-                  {/* Micro-glow */}
-                  <motion.div
-                    className="absolute -top-10 -right-10 w-28 h-28 rounded-full blur-[50px] pointer-events-none"
-                    style={{ background: `${stat.color}10` }}
-                    animate={{ opacity: [0.5, 1, 0.5] }}
-                    transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut', delay: i * 0.8 }}
-                  />
-
-                  <div className="relative z-10">
-                    <div
-                      className="w-9 h-9 rounded-xl flex items-center justify-center mb-3 border"
-                      style={{ background: `${stat.color}12`, borderColor: `${stat.color}25` }}
-                    >
-                      <Icon size={16} style={{ color: stat.color }} />
-                    </div>
-
-                    <div className="flex items-baseline gap-1 mb-1">
-                      <span className="text-3xl font-black text-slate-900 tabular-nums tracking-tighter">
-                        <SpringCounter
-                          target={stat.value}
-                          suffix={stat.suffix}
-                          decimal={stat.decimal}
-                        />
-                      </span>
-                      {stat.sub && (
-                        <span className="text-xs font-bold" style={{ color: stat.color }}>{stat.sub}</span>
-                      )}
-                    </div>
-
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest leading-snug">
-                      {stat.label}
-                    </p>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* EMR scrolling marquee — secondary, below grid */}
-        <div className="mt-24">
-          <p className="text-center text-[9px] font-black uppercase tracking-[0.35em] text-slate-400 mb-8">
-            Integrated with the systems you trust
-          </p>
-          <div className="relative overflow-hidden [mask-image:linear-gradient(to_right,transparent,white_15%,white_85%,transparent)]">
-            <motion.div
-              className="flex gap-14 items-center whitespace-nowrap"
-              animate={{ x: [0, '-50%'] }}
-              transition={{ duration: 28, repeat: Infinity, ease: 'linear' }}
-            >
-              {[...EMR_LOGOS, ...EMR_LOGOS].map((emr, i) => (
-                <div key={i} className="flex items-center gap-2 group cursor-default">
-                  <div className="h-1.5 w-1.5 rounded-full bg-blue-300/50 group-hover:bg-blue-500 transition-colors" />
-                  <span className="text-lg font-black text-slate-600 group-hover:text-slate-900 transition-colors tracking-tighter uppercase italic select-none">
-                    {emr}
-                  </span>
-                </div>
-              ))}
-            </motion.div>
-          </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );
